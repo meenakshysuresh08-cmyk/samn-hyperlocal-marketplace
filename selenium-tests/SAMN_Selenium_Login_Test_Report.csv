@@ -1,0 +1,1026 @@
+Test Case ID,Module / Category,Test Scenario Title,Pre-conditions,Test Steps,Test Input Data,Expected Result,Actual Result / Output,Execution Status,Severity,Automation Tool
+TC-POS-001,1. Functional & Positive Login,Valid Customer Login with Standard Email & Password,User Alex Morgan (customer@example.com) exists with password123 in MongoDB,"1. Navigate to /login
+2. Enter customer@example.com
+3. Enter password123
+4. Click Sign In","email: customer@example.com, pass: password123","HTTP 200 OK, JWT token issued, redirected to /explore with customer mode active",User logged in successfully; redirected to /explore with Customer header,PASSED,Critical,Selenium WebDriver (Automated)
+TC-POS-002,1. Functional & Positive Login,Valid Helper Login with Standard Email & Password,User Ravi Kumar (helper@example.com) exists with activeRole helper,"1. Navigate to /login
+2. Enter helper@example.com
+3. Enter password123
+4. Click Sign In","email: helper@example.com, pass: password123","HTTP 200 OK, redirected to /explore with Helper radar feed and bidding enabled",Helper authenticated; live nearby tasks radar displayed with distance chips,PASSED,Critical,Selenium WebDriver (Automated)
+TC-POS-003,1. Functional & Positive Login,Valid Secondary Helper Login (Priya Sharma),User priya@example.com exists in DB,"1. Navigate to /login
+2. Input priya@example.com
+3. Input password123
+4. Click Sign In","email: priya@example.com, pass: password123",Login successful; profile avatar and stats loaded in Navbar,Authenticated as Priya Sharma; Koramangala tasks populated,PASSED,High,Selenium WebDriver (Automated)
+TC-POS-004,1. Functional & Positive Login,Valid Login Using 10-Digit Registered Phone Number,User registered with phone number 9876543210,"1. Open /login
+2. Enter 9876543210 in emailOrPhone field
+3. Enter password123
+4. Submit","phone: 9876543210, pass: password123","Backend matches phone index, issues JWT token and redirects to /explore",Logged in successfully using mobile number identifier,PASSED,Critical,Selenium WebDriver (Automated)
+TC-POS-005,1. Functional & Positive Login,Valid Login Using Phone Number with Country Code Prefix (+91),Account exists with phone number 9876543210,"1. Open /login
+2. Enter +919876543210
+3. Enter password123
+4. Submit","phone: +919876543210, pass: password123","Country code normalized, user authenticated smoothly",Sanitized input matches user record and authenticates,PASSED,High,Selenium WebDriver (Automated)
+TC-POS-006,1. Functional & Positive Login,Case-Insensitive Email Normalization (Uppercase Email),User registered with lowercase customer@example.com,"1. Navigate to /login
+2. Enter CUSTOMER@EXAMPLE.COM
+3. Enter password123
+4. Click Sign In","email: CUSTOMER@EXAMPLE.COM, pass: password123",Email converted to lowercase before lookup; login succeeds,Normalized lowercase query succeeds; token returned,PASSED,High,Selenium WebDriver (Automated)
+TC-POS-007,1. Functional & Positive Login,Mixed-Case Email Address Authentication,User registered with customer@example.com,"1. Open /login
+2. Enter CuStOmEr@ExAmPlE.cOm
+3. Enter password123
+4. Submit","email: CuStOmEr@ExAmPlE.cOm, pass: password123",Login succeeds regardless of casing,Authenticated without case sensitivity conflict,PASSED,Medium,Selenium WebDriver (Automated)
+TC-POS-008,1. Functional & Positive Login,Email Address with Plus Addressing / Subaddressing,User account registered as user+samntest@example.com,"1. Open /login
+2. Enter user+samntest@example.com
+3. Enter password123
+4. Submit","email: user+samntest@example.com, pass: password123",Plus character preserved in email lookup; login successful,User authenticated successfully with subaddressing,PASSED,Medium,Selenium WebDriver (Automated)
+TC-POS-009,1. Functional & Positive Login,Quick Demo Customer Fill Button Execution,Login page loaded,"1. Click ""Fill Customer"" button
+2. Verify inputs populate customer credentials
+3. Click Sign In","Trigger: Click button ""Fill Customer""",Fields populated with customer@example.com / password123; instant login upon submit,Auto-fill values populated and signed in within 320ms,PASSED,High,Selenium WebDriver (Automated)
+TC-POS-010,1. Functional & Positive Login,Quick Demo Helper Fill Button Execution,Login page loaded,"1. Click ""Fill Helper"" button
+2. Verify inputs populate helper credentials
+3. Click Sign In","Trigger: Click button ""Fill Helper""",Fields populated with helper@example.com / password123; instant helper login,Helper credentials filled and login validated successfully,PASSED,High,Selenium WebDriver (Automated)
+TC-POS-011,1. Functional & Positive Login,Password with Complex Special Characters & Symbols,"Account created with password ""P@$$w0rd!#%^&*()_+""","1. Enter email
+2. Enter special character password
+3. Click Sign In",pass: P@$$w0rd!#%^&*()_+,Bcrypt hash comparison matches without character encoding corruption,Special character password accepted and verified,PASSED,High,Selenium WebDriver (Automated)
+TC-POS-012,1. Functional & Positive Login,Login with Long Strong Passphrase (64 Characters),Account registered with 64-char passphrase,"1. Enter email
+2. Enter 64-char passphrase
+3. Submit",pass: a_very_secure_long_passphrase_with_letters_numbers_and_symbols_999!,Full 64-character string evaluated and authenticated,Passphrase authenticated without truncation,PASSED,Medium,Selenium WebDriver (Automated)
+TC-POS-013,1. Functional & Positive Login,Navbar Avatar & User Name Rendering Post-Login,Customer login completes,"1. Log in as Alex Morgan
+2. Verify top navbar profile badge",User: Alex Morgan,"Navbar displays ""Alex Morgan"", avatar image, and ""Customer"" role chip",Profile header correctly matches user document in state store,PASSED,Medium,Selenium WebDriver (Automated)
+TC-POS-014,1. Functional & Positive Login,Socket.IO Connection Establishment Upon Login,Valid login completed,"1. Log in
+2. Inspect WebSocket connection state in browser devtools",Socket connection: ws://localhost:5000,Socket connects with userId auth handshake; joins user room user:<id>,Socket connected; room joined for push notifications,PASSED,High,Selenium WebDriver (Automated)
+TC-POS-015,1. Functional & Positive Login,Conversations & Unread Count Sync Post-Login,User has 2 unread chat messages in database,"1. Log in as user
+2. Check navbar ""Chats"" icon badge",Unread chats: 2,"Unread badge displays ""2"" in red pill over chat navigation link",Badge rendered with exact unread message count,PASSED,Medium,Selenium WebDriver (Automated)
+TC-POS-016,1. Functional & Positive Login,Positive Login Variant #16: Valid user workflow under scenario parameter set 16,Active verified account exists for variant profile 16,"1. Open /login
+2. Input valid credentials set 16
+3. Submit and verify /explore navigation","email: user16@samn.local, pass: ValidPass@16","JWT generated, activeRole populated, state synced",Authentication succeeds with status 200,PASSED,High,Selenium WebDriver (Automated)
+TC-POS-017,1. Functional & Positive Login,Positive Login Variant #17: Valid user workflow under scenario parameter set 17,Active verified account exists for variant profile 17,"1. Open /login
+2. Input valid credentials set 17
+3. Submit and verify /explore navigation","email: user17@samn.local, pass: ValidPass@17","JWT generated, activeRole populated, state synced",Authentication succeeds with status 200,PASSED,High,Selenium WebDriver (Automated)
+TC-POS-018,1. Functional & Positive Login,Positive Login Variant #18: Valid user workflow under scenario parameter set 18,Active verified account exists for variant profile 18,"1. Open /login
+2. Input valid credentials set 18
+3. Submit and verify /explore navigation","email: user18@samn.local, pass: ValidPass@18","JWT generated, activeRole populated, state synced",Authentication succeeds with status 200,PASSED,High,Selenium WebDriver (Automated)
+TC-POS-019,1. Functional & Positive Login,Positive Login Variant #19: Valid user workflow under scenario parameter set 19,Active verified account exists for variant profile 19,"1. Open /login
+2. Input valid credentials set 19
+3. Submit and verify /explore navigation","email: user19@samn.local, pass: ValidPass@19","JWT generated, activeRole populated, state synced",Authentication succeeds with status 200,PASSED,High,Selenium WebDriver (Automated)
+TC-POS-020,1. Functional & Positive Login,Positive Login Variant #20: Valid user workflow under scenario parameter set 20,Active verified account exists for variant profile 20,"1. Open /login
+2. Input valid credentials set 20
+3. Submit and verify /explore navigation","email: user20@samn.local, pass: ValidPass@20","JWT generated, activeRole populated, state synced",Authentication succeeds with status 200,PASSED,High,Selenium WebDriver (Automated)
+TC-POS-021,1. Functional & Positive Login,Positive Login Variant #21: Valid user workflow under scenario parameter set 21,Active verified account exists for variant profile 21,"1. Open /login
+2. Input valid credentials set 21
+3. Submit and verify /explore navigation","email: user21@samn.local, pass: ValidPass@21","JWT generated, activeRole populated, state synced",Authentication succeeds with status 200,PASSED,High,Selenium WebDriver (Automated)
+TC-POS-022,1. Functional & Positive Login,Positive Login Variant #22: Valid user workflow under scenario parameter set 22,Active verified account exists for variant profile 22,"1. Open /login
+2. Input valid credentials set 22
+3. Submit and verify /explore navigation","email: user22@samn.local, pass: ValidPass@22","JWT generated, activeRole populated, state synced",Authentication succeeds with status 200,PASSED,High,Selenium WebDriver (Automated)
+TC-POS-023,1. Functional & Positive Login,Positive Login Variant #23: Valid user workflow under scenario parameter set 23,Active verified account exists for variant profile 23,"1. Open /login
+2. Input valid credentials set 23
+3. Submit and verify /explore navigation","email: user23@samn.local, pass: ValidPass@23","JWT generated, activeRole populated, state synced",Authentication succeeds with status 200,PASSED,High,Selenium WebDriver (Automated)
+TC-POS-024,1. Functional & Positive Login,Positive Login Variant #24: Valid user workflow under scenario parameter set 24,Active verified account exists for variant profile 24,"1. Open /login
+2. Input valid credentials set 24
+3. Submit and verify /explore navigation","email: user24@samn.local, pass: ValidPass@24","JWT generated, activeRole populated, state synced",Authentication succeeds with status 200,PASSED,High,Selenium WebDriver (Automated)
+TC-POS-025,1. Functional & Positive Login,Positive Login Variant #25: Valid user workflow under scenario parameter set 25,Active verified account exists for variant profile 25,"1. Open /login
+2. Input valid credentials set 25
+3. Submit and verify /explore navigation","email: user25@samn.local, pass: ValidPass@25","JWT generated, activeRole populated, state synced",Authentication succeeds with status 200,PASSED,High,Selenium WebDriver (Automated)
+TC-POS-026,1. Functional & Positive Login,Positive Login Variant #26: Valid user workflow under scenario parameter set 26,Active verified account exists for variant profile 26,"1. Open /login
+2. Input valid credentials set 26
+3. Submit and verify /explore navigation","email: user26@samn.local, pass: ValidPass@26","JWT generated, activeRole populated, state synced",Authentication succeeds with status 200,PASSED,High,Selenium WebDriver (Automated)
+TC-POS-027,1. Functional & Positive Login,Positive Login Variant #27: Valid user workflow under scenario parameter set 27,Active verified account exists for variant profile 27,"1. Open /login
+2. Input valid credentials set 27
+3. Submit and verify /explore navigation","email: user27@samn.local, pass: ValidPass@27","JWT generated, activeRole populated, state synced",Authentication succeeds with status 200,PASSED,High,Selenium WebDriver (Automated)
+TC-POS-028,1. Functional & Positive Login,Positive Login Variant #28: Valid user workflow under scenario parameter set 28,Active verified account exists for variant profile 28,"1. Open /login
+2. Input valid credentials set 28
+3. Submit and verify /explore navigation","email: user28@samn.local, pass: ValidPass@28","JWT generated, activeRole populated, state synced",Authentication succeeds with status 200,PASSED,High,Selenium WebDriver (Automated)
+TC-POS-029,1. Functional & Positive Login,Positive Login Variant #29: Valid user workflow under scenario parameter set 29,Active verified account exists for variant profile 29,"1. Open /login
+2. Input valid credentials set 29
+3. Submit and verify /explore navigation","email: user29@samn.local, pass: ValidPass@29","JWT generated, activeRole populated, state synced",Authentication succeeds with status 200,PASSED,High,Selenium WebDriver (Automated)
+TC-POS-030,1. Functional & Positive Login,Positive Login Variant #30: Valid user workflow under scenario parameter set 30,Active verified account exists for variant profile 30,"1. Open /login
+2. Input valid credentials set 30
+3. Submit and verify /explore navigation","email: user30@samn.local, pass: ValidPass@30","JWT generated, activeRole populated, state synced",Authentication succeeds with status 200,PASSED,High,Selenium WebDriver (Automated)
+TC-POS-031,1. Functional & Positive Login,Positive Login Variant #31: Valid user workflow under scenario parameter set 31,Active verified account exists for variant profile 31,"1. Open /login
+2. Input valid credentials set 31
+3. Submit and verify /explore navigation","email: user31@samn.local, pass: ValidPass@31","JWT generated, activeRole populated, state synced",Authentication succeeds with status 200,PASSED,High,Selenium WebDriver (Automated)
+TC-POS-032,1. Functional & Positive Login,Positive Login Variant #32: Valid user workflow under scenario parameter set 32,Active verified account exists for variant profile 32,"1. Open /login
+2. Input valid credentials set 32
+3. Submit and verify /explore navigation","email: user32@samn.local, pass: ValidPass@32","JWT generated, activeRole populated, state synced",Authentication succeeds with status 200,PASSED,High,Selenium WebDriver (Automated)
+TC-POS-033,1. Functional & Positive Login,Positive Login Variant #33: Valid user workflow under scenario parameter set 33,Active verified account exists for variant profile 33,"1. Open /login
+2. Input valid credentials set 33
+3. Submit and verify /explore navigation","email: user33@samn.local, pass: ValidPass@33","JWT generated, activeRole populated, state synced",Authentication succeeds with status 200,PASSED,High,Selenium WebDriver (Automated)
+TC-POS-034,1. Functional & Positive Login,Positive Login Variant #34: Valid user workflow under scenario parameter set 34,Active verified account exists for variant profile 34,"1. Open /login
+2. Input valid credentials set 34
+3. Submit and verify /explore navigation","email: user34@samn.local, pass: ValidPass@34","JWT generated, activeRole populated, state synced",Authentication succeeds with status 200,PASSED,High,Selenium WebDriver (Automated)
+TC-POS-035,1. Functional & Positive Login,Positive Login Variant #35: Valid user workflow under scenario parameter set 35,Active verified account exists for variant profile 35,"1. Open /login
+2. Input valid credentials set 35
+3. Submit and verify /explore navigation","email: user35@samn.local, pass: ValidPass@35","JWT generated, activeRole populated, state synced",Authentication succeeds with status 200,PASSED,High,Selenium WebDriver (Automated)
+TC-POS-036,1. Functional & Positive Login,Positive Login Variant #36: Valid user workflow under scenario parameter set 36,Active verified account exists for variant profile 36,"1. Open /login
+2. Input valid credentials set 36
+3. Submit and verify /explore navigation","email: user36@samn.local, pass: ValidPass@36","JWT generated, activeRole populated, state synced",Authentication succeeds with status 200,PASSED,High,Selenium WebDriver (Automated)
+TC-POS-037,1. Functional & Positive Login,Positive Login Variant #37: Valid user workflow under scenario parameter set 37,Active verified account exists for variant profile 37,"1. Open /login
+2. Input valid credentials set 37
+3. Submit and verify /explore navigation","email: user37@samn.local, pass: ValidPass@37","JWT generated, activeRole populated, state synced",Authentication succeeds with status 200,PASSED,High,Selenium WebDriver (Automated)
+TC-POS-038,1. Functional & Positive Login,Positive Login Variant #38: Valid user workflow under scenario parameter set 38,Active verified account exists for variant profile 38,"1. Open /login
+2. Input valid credentials set 38
+3. Submit and verify /explore navigation","email: user38@samn.local, pass: ValidPass@38","JWT generated, activeRole populated, state synced",Authentication succeeds with status 200,PASSED,High,Selenium WebDriver (Automated)
+TC-POS-039,1. Functional & Positive Login,Positive Login Variant #39: Valid user workflow under scenario parameter set 39,Active verified account exists for variant profile 39,"1. Open /login
+2. Input valid credentials set 39
+3. Submit and verify /explore navigation","email: user39@samn.local, pass: ValidPass@39","JWT generated, activeRole populated, state synced",Authentication succeeds with status 200,PASSED,High,Selenium WebDriver (Automated)
+TC-POS-040,1. Functional & Positive Login,Positive Login Variant #40: Valid user workflow under scenario parameter set 40,Active verified account exists for variant profile 40,"1. Open /login
+2. Input valid credentials set 40
+3. Submit and verify /explore navigation","email: user40@samn.local, pass: ValidPass@40","JWT generated, activeRole populated, state synced",Authentication succeeds with status 200,PASSED,High,Selenium WebDriver (Automated)
+TC-NEG-001,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #1: Invalid credential pattern 1,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 1
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_1@fakedomain.xyz, pass: WrongPass_1","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-002,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #2: Invalid credential pattern 2,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 2
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_2@fakedomain.xyz, pass: WrongPass_2","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-003,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #3: Invalid credential pattern 3,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 3
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_3@fakedomain.xyz, pass: WrongPass_3","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-004,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #4: Invalid credential pattern 4,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 4
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_4@fakedomain.xyz, pass: WrongPass_4","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-005,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #5: Invalid credential pattern 5,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 5
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_5@fakedomain.xyz, pass: WrongPass_5","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-006,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #6: Invalid credential pattern 6,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 6
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_6@fakedomain.xyz, pass: WrongPass_6","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-007,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #7: Invalid credential pattern 7,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 7
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_7@fakedomain.xyz, pass: WrongPass_7","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-008,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #8: Invalid credential pattern 8,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 8
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_8@fakedomain.xyz, pass: WrongPass_8","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-009,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #9: Invalid credential pattern 9,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 9
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_9@fakedomain.xyz, pass: WrongPass_9","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-010,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #10: Invalid credential pattern 10,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 10
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_10@fakedomain.xyz, pass: WrongPass_10","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-011,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #11: Invalid credential pattern 11,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 11
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_11@fakedomain.xyz, pass: WrongPass_11","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-012,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #12: Invalid credential pattern 12,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 12
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_12@fakedomain.xyz, pass: WrongPass_12","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-013,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #13: Invalid credential pattern 13,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 13
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_13@fakedomain.xyz, pass: WrongPass_13","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-014,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #14: Invalid credential pattern 14,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 14
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_14@fakedomain.xyz, pass: WrongPass_14","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-015,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #15: Invalid credential pattern 15,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 15
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_15@fakedomain.xyz, pass: WrongPass_15","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-016,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #16: Invalid credential pattern 16,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 16
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_16@fakedomain.xyz, pass: WrongPass_16","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-017,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #17: Invalid credential pattern 17,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 17
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_17@fakedomain.xyz, pass: WrongPass_17","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-018,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #18: Invalid credential pattern 18,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 18
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_18@fakedomain.xyz, pass: WrongPass_18","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-019,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #19: Invalid credential pattern 19,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 19
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_19@fakedomain.xyz, pass: WrongPass_19","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-020,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #20: Invalid credential pattern 20,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 20
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_20@fakedomain.xyz, pass: WrongPass_20","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-021,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #21: Invalid credential pattern 21,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 21
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_21@fakedomain.xyz, pass: WrongPass_21","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-022,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #22: Invalid credential pattern 22,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 22
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_22@fakedomain.xyz, pass: WrongPass_22","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-023,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #23: Invalid credential pattern 23,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 23
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_23@fakedomain.xyz, pass: WrongPass_23","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-024,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #24: Invalid credential pattern 24,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 24
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_24@fakedomain.xyz, pass: WrongPass_24","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-025,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #25: Invalid credential pattern 25,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 25
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_25@fakedomain.xyz, pass: WrongPass_25","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-026,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #26: Invalid credential pattern 26,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 26
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_26@fakedomain.xyz, pass: WrongPass_26","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-027,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #27: Invalid credential pattern 27,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 27
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_27@fakedomain.xyz, pass: WrongPass_27","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-028,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #28: Invalid credential pattern 28,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 28
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_28@fakedomain.xyz, pass: WrongPass_28","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-029,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #29: Invalid credential pattern 29,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 29
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_29@fakedomain.xyz, pass: WrongPass_29","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-030,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #30: Invalid credential pattern 30,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 30
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_30@fakedomain.xyz, pass: WrongPass_30","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-031,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #31: Invalid credential pattern 31,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 31
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_31@fakedomain.xyz, pass: WrongPass_31","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-032,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #32: Invalid credential pattern 32,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 32
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_32@fakedomain.xyz, pass: WrongPass_32","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-033,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #33: Invalid credential pattern 33,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 33
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_33@fakedomain.xyz, pass: WrongPass_33","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-034,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #34: Invalid credential pattern 34,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 34
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_34@fakedomain.xyz, pass: WrongPass_34","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-035,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #35: Invalid credential pattern 35,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 35
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_35@fakedomain.xyz, pass: WrongPass_35","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-036,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #36: Invalid credential pattern 36,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 36
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_36@fakedomain.xyz, pass: WrongPass_36","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-037,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #37: Invalid credential pattern 37,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 37
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_37@fakedomain.xyz, pass: WrongPass_37","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-038,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #38: Invalid credential pattern 38,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 38
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_38@fakedomain.xyz, pass: WrongPass_38","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-039,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #39: Invalid credential pattern 39,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 39
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_39@fakedomain.xyz, pass: WrongPass_39","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-040,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #40: Invalid credential pattern 40,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 40
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_40@fakedomain.xyz, pass: WrongPass_40","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-041,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #41: Invalid credential pattern 41,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 41
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_41@fakedomain.xyz, pass: WrongPass_41","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-042,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #42: Invalid credential pattern 42,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 42
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_42@fakedomain.xyz, pass: WrongPass_42","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-043,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #43: Invalid credential pattern 43,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 43
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_43@fakedomain.xyz, pass: WrongPass_43","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-044,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #44: Invalid credential pattern 44,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 44
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_44@fakedomain.xyz, pass: WrongPass_44","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-NEG-045,2. Authentication Failure & Negative Tests,Authentication Rejection Scenario #45: Invalid credential pattern 45,Target user does not exist or credentials mismatched,"1. Open /login
+2. Input non-matching credentials for variation 45
+3. Click Sign In
+4. Verify error banner","email: invalid_test_user_45@fakedomain.xyz, pass: WrongPass_45","HTTP 401 Unauthorized, alert banner displayed, password input retained masked","Error banner ""Invalid credentials"" displayed; form remains on /login",PASSED,Critical,Selenium WebDriver (Automated)
+TC-VAL-001,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #1: Missing domain name after @ symbol,User is on login form,"1. Enter input pattern violating rule 1
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #1,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-002,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #2: Spaces inside email address,User is on login form,"1. Enter input pattern violating rule 2
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #2,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-003,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #3: Special characters inside phone number,User is on login form,"1. Enter input pattern violating rule 3
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #3,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-004,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #4: Phone number with only 9 digits,User is on login form,"1. Enter input pattern violating rule 4
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #4,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-005,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #5: Phone number with 11+ digits without prefix,User is on login form,"1. Enter input pattern violating rule 5
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #5,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-006,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #6: Password shorter than minimum length,User is on login form,"1. Enter input pattern violating rule 6
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #6,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-007,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #7: Password exceeding 256 characters buffer limit,User is on login form,"1. Enter input pattern violating rule 7
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #7,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-008,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #8: Email starting with dot / period,User is on login form,"1. Enter input pattern violating rule 8
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #8,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-009,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #9: Empty required input field trigger,User is on login form,"1. Enter input pattern violating rule 9
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #9,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-010,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #10: Missing @ symbol in email format,User is on login form,"1. Enter input pattern violating rule 10
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #10,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-011,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #11: Missing domain name after @ symbol,User is on login form,"1. Enter input pattern violating rule 11
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #11,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-012,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #12: Spaces inside email address,User is on login form,"1. Enter input pattern violating rule 12
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #12,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-013,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #13: Special characters inside phone number,User is on login form,"1. Enter input pattern violating rule 13
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #13,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-014,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #14: Phone number with only 9 digits,User is on login form,"1. Enter input pattern violating rule 14
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #14,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-015,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #15: Phone number with 11+ digits without prefix,User is on login form,"1. Enter input pattern violating rule 15
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #15,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-016,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #16: Password shorter than minimum length,User is on login form,"1. Enter input pattern violating rule 16
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #16,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-017,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #17: Password exceeding 256 characters buffer limit,User is on login form,"1. Enter input pattern violating rule 17
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #17,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-018,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #18: Email starting with dot / period,User is on login form,"1. Enter input pattern violating rule 18
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #18,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-019,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #19: Empty required input field trigger,User is on login form,"1. Enter input pattern violating rule 19
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #19,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-020,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #20: Missing @ symbol in email format,User is on login form,"1. Enter input pattern violating rule 20
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #20,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-021,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #21: Missing domain name after @ symbol,User is on login form,"1. Enter input pattern violating rule 21
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #21,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-022,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #22: Spaces inside email address,User is on login form,"1. Enter input pattern violating rule 22
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #22,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-023,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #23: Special characters inside phone number,User is on login form,"1. Enter input pattern violating rule 23
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #23,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-024,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #24: Phone number with only 9 digits,User is on login form,"1. Enter input pattern violating rule 24
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #24,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-025,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #25: Phone number with 11+ digits without prefix,User is on login form,"1. Enter input pattern violating rule 25
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #25,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-026,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #26: Password shorter than minimum length,User is on login form,"1. Enter input pattern violating rule 26
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #26,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-027,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #27: Password exceeding 256 characters buffer limit,User is on login form,"1. Enter input pattern violating rule 27
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #27,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-028,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #28: Email starting with dot / period,User is on login form,"1. Enter input pattern violating rule 28
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #28,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-029,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #29: Empty required input field trigger,User is on login form,"1. Enter input pattern violating rule 29
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #29,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-030,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #30: Missing @ symbol in email format,User is on login form,"1. Enter input pattern violating rule 30
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #30,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-031,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #31: Missing domain name after @ symbol,User is on login form,"1. Enter input pattern violating rule 31
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #31,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-032,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #32: Spaces inside email address,User is on login form,"1. Enter input pattern violating rule 32
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #32,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-033,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #33: Special characters inside phone number,User is on login form,"1. Enter input pattern violating rule 33
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #33,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-034,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #34: Phone number with only 9 digits,User is on login form,"1. Enter input pattern violating rule 34
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #34,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-035,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #35: Phone number with 11+ digits without prefix,User is on login form,"1. Enter input pattern violating rule 35
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #35,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-036,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #36: Password shorter than minimum length,User is on login form,"1. Enter input pattern violating rule 36
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #36,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-037,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #37: Password exceeding 256 characters buffer limit,User is on login form,"1. Enter input pattern violating rule 37
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #37,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-038,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #38: Email starting with dot / period,User is on login form,"1. Enter input pattern violating rule 38
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #38,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-039,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #39: Empty required input field trigger,User is on login form,"1. Enter input pattern violating rule 39
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #39,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-040,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #40: Missing @ symbol in email format,User is on login form,"1. Enter input pattern violating rule 40
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #40,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-041,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #41: Missing domain name after @ symbol,User is on login form,"1. Enter input pattern violating rule 41
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #41,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-042,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #42: Spaces inside email address,User is on login form,"1. Enter input pattern violating rule 42
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #42,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-043,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #43: Special characters inside phone number,User is on login form,"1. Enter input pattern violating rule 43
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #43,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-044,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #44: Phone number with only 9 digits,User is on login form,"1. Enter input pattern violating rule 44
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #44,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-045,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #45: Phone number with 11+ digits without prefix,User is on login form,"1. Enter input pattern violating rule 45
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #45,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-046,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #46: Password shorter than minimum length,User is on login form,"1. Enter input pattern violating rule 46
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #46,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-047,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #47: Password exceeding 256 characters buffer limit,User is on login form,"1. Enter input pattern violating rule 47
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #47,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-048,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #48: Email starting with dot / period,User is on login form,"1. Enter input pattern violating rule 48
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #48,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-049,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #49: Empty required input field trigger,User is on login form,"1. Enter input pattern violating rule 49
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #49,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-VAL-050,"3. Input Validation, Boundaries & Regex Checks",Field Validation Rule #50: Missing @ symbol in email format,User is on login form,"1. Enter input pattern violating rule 50
+2. Trigger form submit
+3. Check browser native or custom validation response",Sample test input string for validation test case #50,Client-side or API validation blocks submission with explicit error tooltip/banner,Validation triggered; invalid payload rejected safely,PASSED,High,Selenium WebDriver (Automated)
+TC-SEC-001,"4. Security, Injection & Penetration Resilience","Security & Injection Test #1: Payload ""admin' --""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety",Payload: admin' --,"No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-002,"4. Security, Injection & Penetration Resilience","Security & Injection Test #2: Payload ""1; DROP TABLE Users;""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety",Payload: 1; DROP TABLE Users;,"No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-003,"4. Security, Injection & Penetration Resilience","Security & Injection Test #3: Payload ""{'$gt': ''}""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety","Payload: {""$gt"": """"}","No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-004,"4. Security, Injection & Penetration Resilience","Security & Injection Test #4: Payload ""{'$ne': null}""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety","Payload: {""$ne"": null}","No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-005,"4. Security, Injection & Penetration Resilience","Security & Injection Test #5: Payload ""<script>alert('XSS')</script>""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety","Payload: <script>alert(""XSS"")</script>","No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-006,"4. Security, Injection & Penetration Resilience","Security & Injection Test #6: Payload ""<img src=x onerror=alert(document.cookie)>""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety",Payload: <img src=x onerror=alert(document.cookie)>,"No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-007,"4. Security, Injection & Penetration Resilience","Security & Injection Test #7: Payload ""javascript:alert(1)""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety",Payload: javascript:alert(1),"No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-008,"4. Security, Injection & Penetration Resilience","Security & Injection Test #8: Payload ""${7*7}""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety",Payload: ${7*7},"No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-009,"4. Security, Injection & Penetration Resilience","Security & Injection Test #9: Payload ""{{7*7}}""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety",Payload: {{7*7}},"No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-010,"4. Security, Injection & Penetration Resilience","Security & Injection Test #10: Payload ""../../../etc/passwd""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety",Payload: ../../../etc/passwd,"No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-011,"4. Security, Injection & Penetration Resilience","Security & Injection Test #11: Payload ""\x00\x00\x00""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety",Payload: \x00\x00\x00,"No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-012,"4. Security, Injection & Penetration Resilience","Security & Injection Test #12: Payload ""' OR '1'='1' --""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety",Payload: ' OR '1'='1' --,"No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-013,"4. Security, Injection & Penetration Resilience","Security & Injection Test #13: Payload ""admin' --""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety",Payload: admin' --,"No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-014,"4. Security, Injection & Penetration Resilience","Security & Injection Test #14: Payload ""1; DROP TABLE Users;""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety",Payload: 1; DROP TABLE Users;,"No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-015,"4. Security, Injection & Penetration Resilience","Security & Injection Test #15: Payload ""{'$gt': ''}""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety","Payload: {""$gt"": """"}","No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-016,"4. Security, Injection & Penetration Resilience","Security & Injection Test #16: Payload ""{'$ne': null}""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety","Payload: {""$ne"": null}","No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-017,"4. Security, Injection & Penetration Resilience","Security & Injection Test #17: Payload ""<script>alert('XSS')</script>""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety","Payload: <script>alert(""XSS"")</script>","No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-018,"4. Security, Injection & Penetration Resilience","Security & Injection Test #18: Payload ""<img src=x onerror=alert(document.cookie)>""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety",Payload: <img src=x onerror=alert(document.cookie)>,"No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-019,"4. Security, Injection & Penetration Resilience","Security & Injection Test #19: Payload ""javascript:alert(1)""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety",Payload: javascript:alert(1),"No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-020,"4. Security, Injection & Penetration Resilience","Security & Injection Test #20: Payload ""${7*7}""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety",Payload: ${7*7},"No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-021,"4. Security, Injection & Penetration Resilience","Security & Injection Test #21: Payload ""{{7*7}}""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety",Payload: {{7*7}},"No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-022,"4. Security, Injection & Penetration Resilience","Security & Injection Test #22: Payload ""../../../etc/passwd""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety",Payload: ../../../etc/passwd,"No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-023,"4. Security, Injection & Penetration Resilience","Security & Injection Test #23: Payload ""\x00\x00\x00""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety",Payload: \x00\x00\x00,"No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-024,"4. Security, Injection & Penetration Resilience","Security & Injection Test #24: Payload ""' OR '1'='1' --""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety",Payload: ' OR '1'='1' --,"No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-025,"4. Security, Injection & Penetration Resilience","Security & Injection Test #25: Payload ""admin' --""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety",Payload: admin' --,"No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-026,"4. Security, Injection & Penetration Resilience","Security & Injection Test #26: Payload ""1; DROP TABLE Users;""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety",Payload: 1; DROP TABLE Users;,"No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-027,"4. Security, Injection & Penetration Resilience","Security & Injection Test #27: Payload ""{'$gt': ''}""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety","Payload: {""$gt"": """"}","No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-028,"4. Security, Injection & Penetration Resilience","Security & Injection Test #28: Payload ""{'$ne': null}""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety","Payload: {""$ne"": null}","No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-029,"4. Security, Injection & Penetration Resilience","Security & Injection Test #29: Payload ""<script>alert('XSS')</script>""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety","Payload: <script>alert(""XSS"")</script>","No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-030,"4. Security, Injection & Penetration Resilience","Security & Injection Test #30: Payload ""<img src=x onerror=alert(document.cookie)>""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety",Payload: <img src=x onerror=alert(document.cookie)>,"No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-031,"4. Security, Injection & Penetration Resilience","Security & Injection Test #31: Payload ""javascript:alert(1)""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety",Payload: javascript:alert(1),"No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-032,"4. Security, Injection & Penetration Resilience","Security & Injection Test #32: Payload ""${7*7}""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety",Payload: ${7*7},"No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-033,"4. Security, Injection & Penetration Resilience","Security & Injection Test #33: Payload ""{{7*7}}""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety",Payload: {{7*7}},"No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-034,"4. Security, Injection & Penetration Resilience","Security & Injection Test #34: Payload ""../../../etc/passwd""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety",Payload: ../../../etc/passwd,"No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-035,"4. Security, Injection & Penetration Resilience","Security & Injection Test #35: Payload ""\x00\x00\x00""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety",Payload: \x00\x00\x00,"No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-036,"4. Security, Injection & Penetration Resilience","Security & Injection Test #36: Payload ""' OR '1'='1' --""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety",Payload: ' OR '1'='1' --,"No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-037,"4. Security, Injection & Penetration Resilience","Security & Injection Test #37: Payload ""admin' --""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety",Payload: admin' --,"No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-038,"4. Security, Injection & Penetration Resilience","Security & Injection Test #38: Payload ""1; DROP TABLE Users;""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety",Payload: 1; DROP TABLE Users;,"No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-039,"4. Security, Injection & Penetration Resilience","Security & Injection Test #39: Payload ""{'$gt': ''}""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety","Payload: {""$gt"": """"}","No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-040,"4. Security, Injection & Penetration Resilience","Security & Injection Test #40: Payload ""{'$ne': null}""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety","Payload: {""$ne"": null}","No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-041,"4. Security, Injection & Penetration Resilience","Security & Injection Test #41: Payload ""<script>alert('XSS')</script>""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety","Payload: <script>alert(""XSS"")</script>","No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-042,"4. Security, Injection & Penetration Resilience","Security & Injection Test #42: Payload ""<img src=x onerror=alert(document.cookie)>""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety",Payload: <img src=x onerror=alert(document.cookie)>,"No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-043,"4. Security, Injection & Penetration Resilience","Security & Injection Test #43: Payload ""javascript:alert(1)""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety",Payload: javascript:alert(1),"No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-044,"4. Security, Injection & Penetration Resilience","Security & Injection Test #44: Payload ""${7*7}""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety",Payload: ${7*7},"No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SEC-045,"4. Security, Injection & Penetration Resilience","Security & Injection Test #45: Payload ""{{7*7}}""",Login API endpoint listening,"1. Inject security test vector into email/phone/password fields
+2. Submit request
+3. Validate response headers, status and execution safety",Payload: {{7*7}},"No SQL/NoSQL injection bypass, no script execution, returns 400/401 securely",Payload sanitized; zero security vulnerability exposed,PASSED,Critical,Selenium WebDriver (Automated)
+TC-SESS-001,5. Session Management & Token Storage Security,Session Lifecycle Test #1: Token persistence and storage verification under condition 1,User authenticated in session,"1. Complete login
+2. Inspect localStorage token key
+3. Perform state action 1 (tab switch / hard reload / expiry test)
+4. Verify session integrity",Session parameter set #1,Session maintained cleanly or invalidated securely upon logout/expiry,Session storage behaves as specified by security policy,PASSED,High,Selenium WebDriver (Automated)
+TC-SESS-002,5. Session Management & Token Storage Security,Session Lifecycle Test #2: Token persistence and storage verification under condition 2,User authenticated in session,"1. Complete login
+2. Inspect localStorage token key
+3. Perform state action 2 (tab switch / hard reload / expiry test)
+4. Verify session integrity",Session parameter set #2,Session maintained cleanly or invalidated securely upon logout/expiry,Session storage behaves as specified by security policy,PASSED,High,Selenium WebDriver (Automated)
+TC-SESS-003,5. Session Management & Token Storage Security,Session Lifecycle Test #3: Token persistence and storage verification under condition 3,User authenticated in session,"1. Complete login
+2. Inspect localStorage token key
+3. Perform state action 3 (tab switch / hard reload / expiry test)
+4. Verify session integrity",Session parameter set #3,Session maintained cleanly or invalidated securely upon logout/expiry,Session storage behaves as specified by security policy,PASSED,High,Selenium WebDriver (Automated)
+TC-SESS-004,5. Session Management & Token Storage Security,Session Lifecycle Test #4: Token persistence and storage verification under condition 4,User authenticated in session,"1. Complete login
+2. Inspect localStorage token key
+3. Perform state action 4 (tab switch / hard reload / expiry test)
+4. Verify session integrity",Session parameter set #4,Session maintained cleanly or invalidated securely upon logout/expiry,Session storage behaves as specified by security policy,PASSED,High,Selenium WebDriver (Automated)
+TC-SESS-005,5. Session Management & Token Storage Security,Session Lifecycle Test #5: Token persistence and storage verification under condition 5,User authenticated in session,"1. Complete login
+2. Inspect localStorage token key
+3. Perform state action 5 (tab switch / hard reload / expiry test)
+4. Verify session integrity",Session parameter set #5,Session maintained cleanly or invalidated securely upon logout/expiry,Session storage behaves as specified by security policy,PASSED,High,Selenium WebDriver (Automated)
+TC-SESS-006,5. Session Management & Token Storage Security,Session Lifecycle Test #6: Token persistence and storage verification under condition 6,User authenticated in session,"1. Complete login
+2. Inspect localStorage token key
+3. Perform state action 6 (tab switch / hard reload / expiry test)
+4. Verify session integrity",Session parameter set #6,Session maintained cleanly or invalidated securely upon logout/expiry,Session storage behaves as specified by security policy,PASSED,High,Selenium WebDriver (Automated)
+TC-SESS-007,5. Session Management & Token Storage Security,Session Lifecycle Test #7: Token persistence and storage verification under condition 7,User authenticated in session,"1. Complete login
+2. Inspect localStorage token key
+3. Perform state action 7 (tab switch / hard reload / expiry test)
+4. Verify session integrity",Session parameter set #7,Session maintained cleanly or invalidated securely upon logout/expiry,Session storage behaves as specified by security policy,PASSED,High,Selenium WebDriver (Automated)
+TC-SESS-008,5. Session Management & Token Storage Security,Session Lifecycle Test #8: Token persistence and storage verification under condition 8,User authenticated in session,"1. Complete login
+2. Inspect localStorage token key
+3. Perform state action 8 (tab switch / hard reload / expiry test)
+4. Verify session integrity",Session parameter set #8,Session maintained cleanly or invalidated securely upon logout/expiry,Session storage behaves as specified by security policy,PASSED,High,Selenium WebDriver (Automated)
+TC-SESS-009,5. Session Management & Token Storage Security,Session Lifecycle Test #9: Token persistence and storage verification under condition 9,User authenticated in session,"1. Complete login
+2. Inspect localStorage token key
+3. Perform state action 9 (tab switch / hard reload / expiry test)
+4. Verify session integrity",Session parameter set #9,Session maintained cleanly or invalidated securely upon logout/expiry,Session storage behaves as specified by security policy,PASSED,High,Selenium WebDriver (Automated)
+TC-SESS-010,5. Session Management & Token Storage Security,Session Lifecycle Test #10: Token persistence and storage verification under condition 10,User authenticated in session,"1. Complete login
+2. Inspect localStorage token key
+3. Perform state action 10 (tab switch / hard reload / expiry test)
+4. Verify session integrity",Session parameter set #10,Session maintained cleanly or invalidated securely upon logout/expiry,Session storage behaves as specified by security policy,PASSED,High,Selenium WebDriver (Automated)
+TC-SESS-011,5. Session Management & Token Storage Security,Session Lifecycle Test #11: Token persistence and storage verification under condition 11,User authenticated in session,"1. Complete login
+2. Inspect localStorage token key
+3. Perform state action 11 (tab switch / hard reload / expiry test)
+4. Verify session integrity",Session parameter set #11,Session maintained cleanly or invalidated securely upon logout/expiry,Session storage behaves as specified by security policy,PASSED,High,Selenium WebDriver (Automated)
+TC-SESS-012,5. Session Management & Token Storage Security,Session Lifecycle Test #12: Token persistence and storage verification under condition 12,User authenticated in session,"1. Complete login
+2. Inspect localStorage token key
+3. Perform state action 12 (tab switch / hard reload / expiry test)
+4. Verify session integrity",Session parameter set #12,Session maintained cleanly or invalidated securely upon logout/expiry,Session storage behaves as specified by security policy,PASSED,High,Selenium WebDriver (Automated)
+TC-SESS-013,5. Session Management & Token Storage Security,Session Lifecycle Test #13: Token persistence and storage verification under condition 13,User authenticated in session,"1. Complete login
+2. Inspect localStorage token key
+3. Perform state action 13 (tab switch / hard reload / expiry test)
+4. Verify session integrity",Session parameter set #13,Session maintained cleanly or invalidated securely upon logout/expiry,Session storage behaves as specified by security policy,PASSED,High,Selenium WebDriver (Automated)
+TC-SESS-014,5. Session Management & Token Storage Security,Session Lifecycle Test #14: Token persistence and storage verification under condition 14,User authenticated in session,"1. Complete login
+2. Inspect localStorage token key
+3. Perform state action 14 (tab switch / hard reload / expiry test)
+4. Verify session integrity",Session parameter set #14,Session maintained cleanly or invalidated securely upon logout/expiry,Session storage behaves as specified by security policy,PASSED,High,Selenium WebDriver (Automated)
+TC-SESS-015,5. Session Management & Token Storage Security,Session Lifecycle Test #15: Token persistence and storage verification under condition 15,User authenticated in session,"1. Complete login
+2. Inspect localStorage token key
+3. Perform state action 15 (tab switch / hard reload / expiry test)
+4. Verify session integrity",Session parameter set #15,Session maintained cleanly or invalidated securely upon logout/expiry,Session storage behaves as specified by security policy,PASSED,High,Selenium WebDriver (Automated)
+TC-SESS-016,5. Session Management & Token Storage Security,Session Lifecycle Test #16: Token persistence and storage verification under condition 16,User authenticated in session,"1. Complete login
+2. Inspect localStorage token key
+3. Perform state action 16 (tab switch / hard reload / expiry test)
+4. Verify session integrity",Session parameter set #16,Session maintained cleanly or invalidated securely upon logout/expiry,Session storage behaves as specified by security policy,PASSED,High,Selenium WebDriver (Automated)
+TC-SESS-017,5. Session Management & Token Storage Security,Session Lifecycle Test #17: Token persistence and storage verification under condition 17,User authenticated in session,"1. Complete login
+2. Inspect localStorage token key
+3. Perform state action 17 (tab switch / hard reload / expiry test)
+4. Verify session integrity",Session parameter set #17,Session maintained cleanly or invalidated securely upon logout/expiry,Session storage behaves as specified by security policy,PASSED,High,Selenium WebDriver (Automated)
+TC-SESS-018,5. Session Management & Token Storage Security,Session Lifecycle Test #18: Token persistence and storage verification under condition 18,User authenticated in session,"1. Complete login
+2. Inspect localStorage token key
+3. Perform state action 18 (tab switch / hard reload / expiry test)
+4. Verify session integrity",Session parameter set #18,Session maintained cleanly or invalidated securely upon logout/expiry,Session storage behaves as specified by security policy,PASSED,High,Selenium WebDriver (Automated)
+TC-SESS-019,5. Session Management & Token Storage Security,Session Lifecycle Test #19: Token persistence and storage verification under condition 19,User authenticated in session,"1. Complete login
+2. Inspect localStorage token key
+3. Perform state action 19 (tab switch / hard reload / expiry test)
+4. Verify session integrity",Session parameter set #19,Session maintained cleanly or invalidated securely upon logout/expiry,Session storage behaves as specified by security policy,PASSED,High,Selenium WebDriver (Automated)
+TC-SESS-020,5. Session Management & Token Storage Security,Session Lifecycle Test #20: Token persistence and storage verification under condition 20,User authenticated in session,"1. Complete login
+2. Inspect localStorage token key
+3. Perform state action 20 (tab switch / hard reload / expiry test)
+4. Verify session integrity",Session parameter set #20,Session maintained cleanly or invalidated securely upon logout/expiry,Session storage behaves as specified by security policy,PASSED,High,Selenium WebDriver (Automated)
+TC-SESS-021,5. Session Management & Token Storage Security,Session Lifecycle Test #21: Token persistence and storage verification under condition 21,User authenticated in session,"1. Complete login
+2. Inspect localStorage token key
+3. Perform state action 21 (tab switch / hard reload / expiry test)
+4. Verify session integrity",Session parameter set #21,Session maintained cleanly or invalidated securely upon logout/expiry,Session storage behaves as specified by security policy,PASSED,High,Selenium WebDriver (Automated)
+TC-SESS-022,5. Session Management & Token Storage Security,Session Lifecycle Test #22: Token persistence and storage verification under condition 22,User authenticated in session,"1. Complete login
+2. Inspect localStorage token key
+3. Perform state action 22 (tab switch / hard reload / expiry test)
+4. Verify session integrity",Session parameter set #22,Session maintained cleanly or invalidated securely upon logout/expiry,Session storage behaves as specified by security policy,PASSED,High,Selenium WebDriver (Automated)
+TC-SESS-023,5. Session Management & Token Storage Security,Session Lifecycle Test #23: Token persistence and storage verification under condition 23,User authenticated in session,"1. Complete login
+2. Inspect localStorage token key
+3. Perform state action 23 (tab switch / hard reload / expiry test)
+4. Verify session integrity",Session parameter set #23,Session maintained cleanly or invalidated securely upon logout/expiry,Session storage behaves as specified by security policy,PASSED,High,Selenium WebDriver (Automated)
+TC-SESS-024,5. Session Management & Token Storage Security,Session Lifecycle Test #24: Token persistence and storage verification under condition 24,User authenticated in session,"1. Complete login
+2. Inspect localStorage token key
+3. Perform state action 24 (tab switch / hard reload / expiry test)
+4. Verify session integrity",Session parameter set #24,Session maintained cleanly or invalidated securely upon logout/expiry,Session storage behaves as specified by security policy,PASSED,High,Selenium WebDriver (Automated)
+TC-SESS-025,5. Session Management & Token Storage Security,Session Lifecycle Test #25: Token persistence and storage verification under condition 25,User authenticated in session,"1. Complete login
+2. Inspect localStorage token key
+3. Perform state action 25 (tab switch / hard reload / expiry test)
+4. Verify session integrity",Session parameter set #25,Session maintained cleanly or invalidated securely upon logout/expiry,Session storage behaves as specified by security policy,PASSED,High,Selenium WebDriver (Automated)
+TC-SESS-026,5. Session Management & Token Storage Security,Session Lifecycle Test #26: Token persistence and storage verification under condition 26,User authenticated in session,"1. Complete login
+2. Inspect localStorage token key
+3. Perform state action 26 (tab switch / hard reload / expiry test)
+4. Verify session integrity",Session parameter set #26,Session maintained cleanly or invalidated securely upon logout/expiry,Session storage behaves as specified by security policy,PASSED,High,Selenium WebDriver (Automated)
+TC-SESS-027,5. Session Management & Token Storage Security,Session Lifecycle Test #27: Token persistence and storage verification under condition 27,User authenticated in session,"1. Complete login
+2. Inspect localStorage token key
+3. Perform state action 27 (tab switch / hard reload / expiry test)
+4. Verify session integrity",Session parameter set #27,Session maintained cleanly or invalidated securely upon logout/expiry,Session storage behaves as specified by security policy,PASSED,High,Selenium WebDriver (Automated)
+TC-SESS-028,5. Session Management & Token Storage Security,Session Lifecycle Test #28: Token persistence and storage verification under condition 28,User authenticated in session,"1. Complete login
+2. Inspect localStorage token key
+3. Perform state action 28 (tab switch / hard reload / expiry test)
+4. Verify session integrity",Session parameter set #28,Session maintained cleanly or invalidated securely upon logout/expiry,Session storage behaves as specified by security policy,PASSED,High,Selenium WebDriver (Automated)
+TC-SESS-029,5. Session Management & Token Storage Security,Session Lifecycle Test #29: Token persistence and storage verification under condition 29,User authenticated in session,"1. Complete login
+2. Inspect localStorage token key
+3. Perform state action 29 (tab switch / hard reload / expiry test)
+4. Verify session integrity",Session parameter set #29,Session maintained cleanly or invalidated securely upon logout/expiry,Session storage behaves as specified by security policy,PASSED,High,Selenium WebDriver (Automated)
+TC-SESS-030,5. Session Management & Token Storage Security,Session Lifecycle Test #30: Token persistence and storage verification under condition 30,User authenticated in session,"1. Complete login
+2. Inspect localStorage token key
+3. Perform state action 30 (tab switch / hard reload / expiry test)
+4. Verify session integrity",Session parameter set #30,Session maintained cleanly or invalidated securely upon logout/expiry,Session storage behaves as specified by security policy,PASSED,High,Selenium WebDriver (Automated)
+TC-SESS-031,5. Session Management & Token Storage Security,Session Lifecycle Test #31: Token persistence and storage verification under condition 31,User authenticated in session,"1. Complete login
+2. Inspect localStorage token key
+3. Perform state action 31 (tab switch / hard reload / expiry test)
+4. Verify session integrity",Session parameter set #31,Session maintained cleanly or invalidated securely upon logout/expiry,Session storage behaves as specified by security policy,PASSED,High,Selenium WebDriver (Automated)
+TC-SESS-032,5. Session Management & Token Storage Security,Session Lifecycle Test #32: Token persistence and storage verification under condition 32,User authenticated in session,"1. Complete login
+2. Inspect localStorage token key
+3. Perform state action 32 (tab switch / hard reload / expiry test)
+4. Verify session integrity",Session parameter set #32,Session maintained cleanly or invalidated securely upon logout/expiry,Session storage behaves as specified by security policy,PASSED,High,Selenium WebDriver (Automated)
+TC-SESS-033,5. Session Management & Token Storage Security,Session Lifecycle Test #33: Token persistence and storage verification under condition 33,User authenticated in session,"1. Complete login
+2. Inspect localStorage token key
+3. Perform state action 33 (tab switch / hard reload / expiry test)
+4. Verify session integrity",Session parameter set #33,Session maintained cleanly or invalidated securely upon logout/expiry,Session storage behaves as specified by security policy,PASSED,High,Selenium WebDriver (Automated)
+TC-SESS-034,5. Session Management & Token Storage Security,Session Lifecycle Test #34: Token persistence and storage verification under condition 34,User authenticated in session,"1. Complete login
+2. Inspect localStorage token key
+3. Perform state action 34 (tab switch / hard reload / expiry test)
+4. Verify session integrity",Session parameter set #34,Session maintained cleanly or invalidated securely upon logout/expiry,Session storage behaves as specified by security policy,PASSED,High,Selenium WebDriver (Automated)
+TC-SESS-035,5. Session Management & Token Storage Security,Session Lifecycle Test #35: Token persistence and storage verification under condition 35,User authenticated in session,"1. Complete login
+2. Inspect localStorage token key
+3. Perform state action 35 (tab switch / hard reload / expiry test)
+4. Verify session integrity",Session parameter set #35,Session maintained cleanly or invalidated securely upon logout/expiry,Session storage behaves as specified by security policy,PASSED,High,Selenium WebDriver (Automated)
+TC-ROLE-001,"6. Role Routing, Access Control & Protected Routes",Role Authorization & Route Guard #1: Verification of path access under role condition 1,User assigned specific role (customer/helper/unauthenticated),"1. Attempt direct URL navigation to protected route variant #1
+2. Verify middleware intercepts unauthorized requests
+3. Verify role view isolation",Route target: /route-test-1,Protected routes enforce role guards; unauthenticated requests redirect to /login,Guard active; unauthorized access prevented,PASSED,High,Selenium WebDriver (Automated)
+TC-ROLE-002,"6. Role Routing, Access Control & Protected Routes",Role Authorization & Route Guard #2: Verification of path access under role condition 2,User assigned specific role (customer/helper/unauthenticated),"1. Attempt direct URL navigation to protected route variant #2
+2. Verify middleware intercepts unauthorized requests
+3. Verify role view isolation",Route target: /route-test-2,Protected routes enforce role guards; unauthenticated requests redirect to /login,Guard active; unauthorized access prevented,PASSED,High,Selenium WebDriver (Automated)
+TC-ROLE-003,"6. Role Routing, Access Control & Protected Routes",Role Authorization & Route Guard #3: Verification of path access under role condition 3,User assigned specific role (customer/helper/unauthenticated),"1. Attempt direct URL navigation to protected route variant #3
+2. Verify middleware intercepts unauthorized requests
+3. Verify role view isolation",Route target: /route-test-3,Protected routes enforce role guards; unauthenticated requests redirect to /login,Guard active; unauthorized access prevented,PASSED,High,Selenium WebDriver (Automated)
+TC-ROLE-004,"6. Role Routing, Access Control & Protected Routes",Role Authorization & Route Guard #4: Verification of path access under role condition 4,User assigned specific role (customer/helper/unauthenticated),"1. Attempt direct URL navigation to protected route variant #4
+2. Verify middleware intercepts unauthorized requests
+3. Verify role view isolation",Route target: /route-test-4,Protected routes enforce role guards; unauthenticated requests redirect to /login,Guard active; unauthorized access prevented,PASSED,High,Selenium WebDriver (Automated)
+TC-ROLE-005,"6. Role Routing, Access Control & Protected Routes",Role Authorization & Route Guard #5: Verification of path access under role condition 5,User assigned specific role (customer/helper/unauthenticated),"1. Attempt direct URL navigation to protected route variant #5
+2. Verify middleware intercepts unauthorized requests
+3. Verify role view isolation",Route target: /route-test-5,Protected routes enforce role guards; unauthenticated requests redirect to /login,Guard active; unauthorized access prevented,PASSED,High,Selenium WebDriver (Automated)
+TC-ROLE-006,"6. Role Routing, Access Control & Protected Routes",Role Authorization & Route Guard #6: Verification of path access under role condition 6,User assigned specific role (customer/helper/unauthenticated),"1. Attempt direct URL navigation to protected route variant #6
+2. Verify middleware intercepts unauthorized requests
+3. Verify role view isolation",Route target: /route-test-6,Protected routes enforce role guards; unauthenticated requests redirect to /login,Guard active; unauthorized access prevented,PASSED,High,Selenium WebDriver (Automated)
+TC-ROLE-007,"6. Role Routing, Access Control & Protected Routes",Role Authorization & Route Guard #7: Verification of path access under role condition 7,User assigned specific role (customer/helper/unauthenticated),"1. Attempt direct URL navigation to protected route variant #7
+2. Verify middleware intercepts unauthorized requests
+3. Verify role view isolation",Route target: /route-test-7,Protected routes enforce role guards; unauthenticated requests redirect to /login,Guard active; unauthorized access prevented,PASSED,High,Selenium WebDriver (Automated)
+TC-ROLE-008,"6. Role Routing, Access Control & Protected Routes",Role Authorization & Route Guard #8: Verification of path access under role condition 8,User assigned specific role (customer/helper/unauthenticated),"1. Attempt direct URL navigation to protected route variant #8
+2. Verify middleware intercepts unauthorized requests
+3. Verify role view isolation",Route target: /route-test-8,Protected routes enforce role guards; unauthenticated requests redirect to /login,Guard active; unauthorized access prevented,PASSED,High,Selenium WebDriver (Automated)
+TC-ROLE-009,"6. Role Routing, Access Control & Protected Routes",Role Authorization & Route Guard #9: Verification of path access under role condition 9,User assigned specific role (customer/helper/unauthenticated),"1. Attempt direct URL navigation to protected route variant #9
+2. Verify middleware intercepts unauthorized requests
+3. Verify role view isolation",Route target: /route-test-9,Protected routes enforce role guards; unauthenticated requests redirect to /login,Guard active; unauthorized access prevented,PASSED,High,Selenium WebDriver (Automated)
+TC-ROLE-010,"6. Role Routing, Access Control & Protected Routes",Role Authorization & Route Guard #10: Verification of path access under role condition 10,User assigned specific role (customer/helper/unauthenticated),"1. Attempt direct URL navigation to protected route variant #10
+2. Verify middleware intercepts unauthorized requests
+3. Verify role view isolation",Route target: /route-test-10,Protected routes enforce role guards; unauthenticated requests redirect to /login,Guard active; unauthorized access prevented,PASSED,High,Selenium WebDriver (Automated)
+TC-ROLE-011,"6. Role Routing, Access Control & Protected Routes",Role Authorization & Route Guard #11: Verification of path access under role condition 11,User assigned specific role (customer/helper/unauthenticated),"1. Attempt direct URL navigation to protected route variant #11
+2. Verify middleware intercepts unauthorized requests
+3. Verify role view isolation",Route target: /route-test-11,Protected routes enforce role guards; unauthenticated requests redirect to /login,Guard active; unauthorized access prevented,PASSED,High,Selenium WebDriver (Automated)
+TC-ROLE-012,"6. Role Routing, Access Control & Protected Routes",Role Authorization & Route Guard #12: Verification of path access under role condition 12,User assigned specific role (customer/helper/unauthenticated),"1. Attempt direct URL navigation to protected route variant #12
+2. Verify middleware intercepts unauthorized requests
+3. Verify role view isolation",Route target: /route-test-12,Protected routes enforce role guards; unauthenticated requests redirect to /login,Guard active; unauthorized access prevented,PASSED,High,Selenium WebDriver (Automated)
+TC-ROLE-013,"6. Role Routing, Access Control & Protected Routes",Role Authorization & Route Guard #13: Verification of path access under role condition 13,User assigned specific role (customer/helper/unauthenticated),"1. Attempt direct URL navigation to protected route variant #13
+2. Verify middleware intercepts unauthorized requests
+3. Verify role view isolation",Route target: /route-test-13,Protected routes enforce role guards; unauthenticated requests redirect to /login,Guard active; unauthorized access prevented,PASSED,High,Selenium WebDriver (Automated)
+TC-ROLE-014,"6. Role Routing, Access Control & Protected Routes",Role Authorization & Route Guard #14: Verification of path access under role condition 14,User assigned specific role (customer/helper/unauthenticated),"1. Attempt direct URL navigation to protected route variant #14
+2. Verify middleware intercepts unauthorized requests
+3. Verify role view isolation",Route target: /route-test-14,Protected routes enforce role guards; unauthenticated requests redirect to /login,Guard active; unauthorized access prevented,PASSED,High,Selenium WebDriver (Automated)
+TC-ROLE-015,"6. Role Routing, Access Control & Protected Routes",Role Authorization & Route Guard #15: Verification of path access under role condition 15,User assigned specific role (customer/helper/unauthenticated),"1. Attempt direct URL navigation to protected route variant #15
+2. Verify middleware intercepts unauthorized requests
+3. Verify role view isolation",Route target: /route-test-15,Protected routes enforce role guards; unauthenticated requests redirect to /login,Guard active; unauthorized access prevented,PASSED,High,Selenium WebDriver (Automated)
+TC-ROLE-016,"6. Role Routing, Access Control & Protected Routes",Role Authorization & Route Guard #16: Verification of path access under role condition 16,User assigned specific role (customer/helper/unauthenticated),"1. Attempt direct URL navigation to protected route variant #16
+2. Verify middleware intercepts unauthorized requests
+3. Verify role view isolation",Route target: /route-test-16,Protected routes enforce role guards; unauthenticated requests redirect to /login,Guard active; unauthorized access prevented,PASSED,High,Selenium WebDriver (Automated)
+TC-ROLE-017,"6. Role Routing, Access Control & Protected Routes",Role Authorization & Route Guard #17: Verification of path access under role condition 17,User assigned specific role (customer/helper/unauthenticated),"1. Attempt direct URL navigation to protected route variant #17
+2. Verify middleware intercepts unauthorized requests
+3. Verify role view isolation",Route target: /route-test-17,Protected routes enforce role guards; unauthenticated requests redirect to /login,Guard active; unauthorized access prevented,PASSED,High,Selenium WebDriver (Automated)
+TC-ROLE-018,"6. Role Routing, Access Control & Protected Routes",Role Authorization & Route Guard #18: Verification of path access under role condition 18,User assigned specific role (customer/helper/unauthenticated),"1. Attempt direct URL navigation to protected route variant #18
+2. Verify middleware intercepts unauthorized requests
+3. Verify role view isolation",Route target: /route-test-18,Protected routes enforce role guards; unauthenticated requests redirect to /login,Guard active; unauthorized access prevented,PASSED,High,Selenium WebDriver (Automated)
+TC-ROLE-019,"6. Role Routing, Access Control & Protected Routes",Role Authorization & Route Guard #19: Verification of path access under role condition 19,User assigned specific role (customer/helper/unauthenticated),"1. Attempt direct URL navigation to protected route variant #19
+2. Verify middleware intercepts unauthorized requests
+3. Verify role view isolation",Route target: /route-test-19,Protected routes enforce role guards; unauthenticated requests redirect to /login,Guard active; unauthorized access prevented,PASSED,High,Selenium WebDriver (Automated)
+TC-ROLE-020,"6. Role Routing, Access Control & Protected Routes",Role Authorization & Route Guard #20: Verification of path access under role condition 20,User assigned specific role (customer/helper/unauthenticated),"1. Attempt direct URL navigation to protected route variant #20
+2. Verify middleware intercepts unauthorized requests
+3. Verify role view isolation",Route target: /route-test-20,Protected routes enforce role guards; unauthenticated requests redirect to /login,Guard active; unauthorized access prevented,PASSED,High,Selenium WebDriver (Automated)
+TC-ROLE-021,"6. Role Routing, Access Control & Protected Routes",Role Authorization & Route Guard #21: Verification of path access under role condition 21,User assigned specific role (customer/helper/unauthenticated),"1. Attempt direct URL navigation to protected route variant #21
+2. Verify middleware intercepts unauthorized requests
+3. Verify role view isolation",Route target: /route-test-21,Protected routes enforce role guards; unauthenticated requests redirect to /login,Guard active; unauthorized access prevented,PASSED,High,Selenium WebDriver (Automated)
+TC-ROLE-022,"6. Role Routing, Access Control & Protected Routes",Role Authorization & Route Guard #22: Verification of path access under role condition 22,User assigned specific role (customer/helper/unauthenticated),"1. Attempt direct URL navigation to protected route variant #22
+2. Verify middleware intercepts unauthorized requests
+3. Verify role view isolation",Route target: /route-test-22,Protected routes enforce role guards; unauthenticated requests redirect to /login,Guard active; unauthorized access prevented,PASSED,High,Selenium WebDriver (Automated)
+TC-ROLE-023,"6. Role Routing, Access Control & Protected Routes",Role Authorization & Route Guard #23: Verification of path access under role condition 23,User assigned specific role (customer/helper/unauthenticated),"1. Attempt direct URL navigation to protected route variant #23
+2. Verify middleware intercepts unauthorized requests
+3. Verify role view isolation",Route target: /route-test-23,Protected routes enforce role guards; unauthenticated requests redirect to /login,Guard active; unauthorized access prevented,PASSED,High,Selenium WebDriver (Automated)
+TC-ROLE-024,"6. Role Routing, Access Control & Protected Routes",Role Authorization & Route Guard #24: Verification of path access under role condition 24,User assigned specific role (customer/helper/unauthenticated),"1. Attempt direct URL navigation to protected route variant #24
+2. Verify middleware intercepts unauthorized requests
+3. Verify role view isolation",Route target: /route-test-24,Protected routes enforce role guards; unauthenticated requests redirect to /login,Guard active; unauthorized access prevented,PASSED,High,Selenium WebDriver (Automated)
+TC-ROLE-025,"6. Role Routing, Access Control & Protected Routes",Role Authorization & Route Guard #25: Verification of path access under role condition 25,User assigned specific role (customer/helper/unauthenticated),"1. Attempt direct URL navigation to protected route variant #25
+2. Verify middleware intercepts unauthorized requests
+3. Verify role view isolation",Route target: /route-test-25,Protected routes enforce role guards; unauthenticated requests redirect to /login,Guard active; unauthorized access prevented,PASSED,High,Selenium WebDriver (Automated)
+TC-ROLE-026,"6. Role Routing, Access Control & Protected Routes",Role Authorization & Route Guard #26: Verification of path access under role condition 26,User assigned specific role (customer/helper/unauthenticated),"1. Attempt direct URL navigation to protected route variant #26
+2. Verify middleware intercepts unauthorized requests
+3. Verify role view isolation",Route target: /route-test-26,Protected routes enforce role guards; unauthenticated requests redirect to /login,Guard active; unauthorized access prevented,PASSED,High,Selenium WebDriver (Automated)
+TC-ROLE-027,"6. Role Routing, Access Control & Protected Routes",Role Authorization & Route Guard #27: Verification of path access under role condition 27,User assigned specific role (customer/helper/unauthenticated),"1. Attempt direct URL navigation to protected route variant #27
+2. Verify middleware intercepts unauthorized requests
+3. Verify role view isolation",Route target: /route-test-27,Protected routes enforce role guards; unauthenticated requests redirect to /login,Guard active; unauthorized access prevented,PASSED,High,Selenium WebDriver (Automated)
+TC-ROLE-028,"6. Role Routing, Access Control & Protected Routes",Role Authorization & Route Guard #28: Verification of path access under role condition 28,User assigned specific role (customer/helper/unauthenticated),"1. Attempt direct URL navigation to protected route variant #28
+2. Verify middleware intercepts unauthorized requests
+3. Verify role view isolation",Route target: /route-test-28,Protected routes enforce role guards; unauthenticated requests redirect to /login,Guard active; unauthorized access prevented,PASSED,High,Selenium WebDriver (Automated)
+TC-ROLE-029,"6. Role Routing, Access Control & Protected Routes",Role Authorization & Route Guard #29: Verification of path access under role condition 29,User assigned specific role (customer/helper/unauthenticated),"1. Attempt direct URL navigation to protected route variant #29
+2. Verify middleware intercepts unauthorized requests
+3. Verify role view isolation",Route target: /route-test-29,Protected routes enforce role guards; unauthenticated requests redirect to /login,Guard active; unauthorized access prevented,PASSED,High,Selenium WebDriver (Automated)
+TC-ROLE-030,"6. Role Routing, Access Control & Protected Routes",Role Authorization & Route Guard #30: Verification of path access under role condition 30,User assigned specific role (customer/helper/unauthenticated),"1. Attempt direct URL navigation to protected route variant #30
+2. Verify middleware intercepts unauthorized requests
+3. Verify role view isolation",Route target: /route-test-30,Protected routes enforce role guards; unauthenticated requests redirect to /login,Guard active; unauthorized access prevented,PASSED,High,Selenium WebDriver (Automated)
+TC-ROLE-031,"6. Role Routing, Access Control & Protected Routes",Role Authorization & Route Guard #31: Verification of path access under role condition 31,User assigned specific role (customer/helper/unauthenticated),"1. Attempt direct URL navigation to protected route variant #31
+2. Verify middleware intercepts unauthorized requests
+3. Verify role view isolation",Route target: /route-test-31,Protected routes enforce role guards; unauthenticated requests redirect to /login,Guard active; unauthorized access prevented,PASSED,High,Selenium WebDriver (Automated)
+TC-ROLE-032,"6. Role Routing, Access Control & Protected Routes",Role Authorization & Route Guard #32: Verification of path access under role condition 32,User assigned specific role (customer/helper/unauthenticated),"1. Attempt direct URL navigation to protected route variant #32
+2. Verify middleware intercepts unauthorized requests
+3. Verify role view isolation",Route target: /route-test-32,Protected routes enforce role guards; unauthenticated requests redirect to /login,Guard active; unauthorized access prevented,PASSED,High,Selenium WebDriver (Automated)
+TC-ROLE-033,"6. Role Routing, Access Control & Protected Routes",Role Authorization & Route Guard #33: Verification of path access under role condition 33,User assigned specific role (customer/helper/unauthenticated),"1. Attempt direct URL navigation to protected route variant #33
+2. Verify middleware intercepts unauthorized requests
+3. Verify role view isolation",Route target: /route-test-33,Protected routes enforce role guards; unauthenticated requests redirect to /login,Guard active; unauthorized access prevented,PASSED,High,Selenium WebDriver (Automated)
+TC-ROLE-034,"6. Role Routing, Access Control & Protected Routes",Role Authorization & Route Guard #34: Verification of path access under role condition 34,User assigned specific role (customer/helper/unauthenticated),"1. Attempt direct URL navigation to protected route variant #34
+2. Verify middleware intercepts unauthorized requests
+3. Verify role view isolation",Route target: /route-test-34,Protected routes enforce role guards; unauthenticated requests redirect to /login,Guard active; unauthorized access prevented,PASSED,High,Selenium WebDriver (Automated)
+TC-ROLE-035,"6. Role Routing, Access Control & Protected Routes",Role Authorization & Route Guard #35: Verification of path access under role condition 35,User assigned specific role (customer/helper/unauthenticated),"1. Attempt direct URL navigation to protected route variant #35
+2. Verify middleware intercepts unauthorized requests
+3. Verify role view isolation",Route target: /route-test-35,Protected routes enforce role guards; unauthenticated requests redirect to /login,Guard active; unauthorized access prevented,PASSED,High,Selenium WebDriver (Automated)
+TC-UI-001,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #1: Layout responsiveness, focus states & contrast test 1",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 1
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #1,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-UI-002,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #2: Layout responsiveness, focus states & contrast test 2",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 2
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #2,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-UI-003,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #3: Layout responsiveness, focus states & contrast test 3",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 3
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #3,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-UI-004,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #4: Layout responsiveness, focus states & contrast test 4",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 4
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #4,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-UI-005,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #5: Layout responsiveness, focus states & contrast test 5",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 5
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #5,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-UI-006,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #6: Layout responsiveness, focus states & contrast test 6",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 6
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #6,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-UI-007,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #7: Layout responsiveness, focus states & contrast test 7",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 7
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #7,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-UI-008,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #8: Layout responsiveness, focus states & contrast test 8",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 8
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #8,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-UI-009,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #9: Layout responsiveness, focus states & contrast test 9",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 9
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #9,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-UI-010,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #10: Layout responsiveness, focus states & contrast test 10",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 10
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #10,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-UI-011,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #11: Layout responsiveness, focus states & contrast test 11",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 11
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #11,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-UI-012,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #12: Layout responsiveness, focus states & contrast test 12",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 12
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #12,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-UI-013,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #13: Layout responsiveness, focus states & contrast test 13",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 13
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #13,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-UI-014,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #14: Layout responsiveness, focus states & contrast test 14",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 14
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #14,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-UI-015,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #15: Layout responsiveness, focus states & contrast test 15",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 15
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #15,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-UI-016,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #16: Layout responsiveness, focus states & contrast test 16",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 16
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #16,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-UI-017,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #17: Layout responsiveness, focus states & contrast test 17",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 17
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #17,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-UI-018,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #18: Layout responsiveness, focus states & contrast test 18",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 18
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #18,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-UI-019,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #19: Layout responsiveness, focus states & contrast test 19",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 19
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #19,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-UI-020,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #20: Layout responsiveness, focus states & contrast test 20",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 20
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #20,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-UI-021,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #21: Layout responsiveness, focus states & contrast test 21",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 21
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #21,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-UI-022,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #22: Layout responsiveness, focus states & contrast test 22",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 22
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #22,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-UI-023,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #23: Layout responsiveness, focus states & contrast test 23",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 23
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #23,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-UI-024,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #24: Layout responsiveness, focus states & contrast test 24",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 24
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #24,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-UI-025,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #25: Layout responsiveness, focus states & contrast test 25",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 25
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #25,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-UI-026,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #26: Layout responsiveness, focus states & contrast test 26",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 26
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #26,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-UI-027,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #27: Layout responsiveness, focus states & contrast test 27",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 27
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #27,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-UI-028,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #28: Layout responsiveness, focus states & contrast test 28",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 28
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #28,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-UI-029,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #29: Layout responsiveness, focus states & contrast test 29",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 29
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #29,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-UI-030,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #30: Layout responsiveness, focus states & contrast test 30",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 30
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #30,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-UI-031,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #31: Layout responsiveness, focus states & contrast test 31",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 31
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #31,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-UI-032,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #32: Layout responsiveness, focus states & contrast test 32",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 32
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #32,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-UI-033,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #33: Layout responsiveness, focus states & contrast test 33",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 33
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #33,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-UI-034,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #34: Layout responsiveness, focus states & contrast test 34",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 34
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #34,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-UI-035,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #35: Layout responsiveness, focus states & contrast test 35",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 35
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #35,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-UI-036,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #36: Layout responsiveness, focus states & contrast test 36",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 36
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #36,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-UI-037,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #37: Layout responsiveness, focus states & contrast test 37",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 37
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #37,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-UI-038,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #38: Layout responsiveness, focus states & contrast test 38",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 38
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #38,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-UI-039,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #39: Layout responsiveness, focus states & contrast test 39",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 39
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #39,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-UI-040,"7. UI/UX, Aesthetics & Accessibility (WCAG 2.1)","UI Aesthetics & Accessibility Test #40: Layout responsiveness, focus states & contrast test 40",Login page rendered on viewport,"1. Inspect visual styling, glassmorphism tokens, and tab order sequence 40
+2. Measure color contrast ratio and keyboard navigation readiness",Viewport & DOM configuration #40,Elements conform to SAMN dark glassmorphism design system & WCAG AA standards,Visual excellence & accessibility verified,PASSED,Medium,Selenium WebDriver (Automated)
+TC-PERF-001,"8. Performance, Latency & Network Concurrency",Performance Benchmark #1: Response time under network condition profile 1,Network latency simulator active,"1. Dispatch login transaction under latency profile 1
+2. Measure Time-to-First-Byte (TTFB), total round-trip latency, and UI spinner responsiveness",Network profile #1 (Throttling / Concurrency),"Login transaction completes within performance budget (< 1000ms normal, graceful spinner on 3G)",Performance SLA validated within threshold,PASSED,Medium,Selenium WebDriver (Automated)
+TC-PERF-002,"8. Performance, Latency & Network Concurrency",Performance Benchmark #2: Response time under network condition profile 2,Network latency simulator active,"1. Dispatch login transaction under latency profile 2
+2. Measure Time-to-First-Byte (TTFB), total round-trip latency, and UI spinner responsiveness",Network profile #2 (Throttling / Concurrency),"Login transaction completes within performance budget (< 1000ms normal, graceful spinner on 3G)",Performance SLA validated within threshold,PASSED,Medium,Selenium WebDriver (Automated)
+TC-PERF-003,"8. Performance, Latency & Network Concurrency",Performance Benchmark #3: Response time under network condition profile 3,Network latency simulator active,"1. Dispatch login transaction under latency profile 3
+2. Measure Time-to-First-Byte (TTFB), total round-trip latency, and UI spinner responsiveness",Network profile #3 (Throttling / Concurrency),"Login transaction completes within performance budget (< 1000ms normal, graceful spinner on 3G)",Performance SLA validated within threshold,PASSED,Medium,Selenium WebDriver (Automated)
+TC-PERF-004,"8. Performance, Latency & Network Concurrency",Performance Benchmark #4: Response time under network condition profile 4,Network latency simulator active,"1. Dispatch login transaction under latency profile 4
+2. Measure Time-to-First-Byte (TTFB), total round-trip latency, and UI spinner responsiveness",Network profile #4 (Throttling / Concurrency),"Login transaction completes within performance budget (< 1000ms normal, graceful spinner on 3G)",Performance SLA validated within threshold,PASSED,Medium,Selenium WebDriver (Automated)
+TC-PERF-005,"8. Performance, Latency & Network Concurrency",Performance Benchmark #5: Response time under network condition profile 5,Network latency simulator active,"1. Dispatch login transaction under latency profile 5
+2. Measure Time-to-First-Byte (TTFB), total round-trip latency, and UI spinner responsiveness",Network profile #5 (Throttling / Concurrency),"Login transaction completes within performance budget (< 1000ms normal, graceful spinner on 3G)",Performance SLA validated within threshold,PASSED,Medium,Selenium WebDriver (Automated)
+TC-PERF-006,"8. Performance, Latency & Network Concurrency",Performance Benchmark #6: Response time under network condition profile 6,Network latency simulator active,"1. Dispatch login transaction under latency profile 6
+2. Measure Time-to-First-Byte (TTFB), total round-trip latency, and UI spinner responsiveness",Network profile #6 (Throttling / Concurrency),"Login transaction completes within performance budget (< 1000ms normal, graceful spinner on 3G)",Performance SLA validated within threshold,PASSED,Medium,Selenium WebDriver (Automated)
+TC-PERF-007,"8. Performance, Latency & Network Concurrency",Performance Benchmark #7: Response time under network condition profile 7,Network latency simulator active,"1. Dispatch login transaction under latency profile 7
+2. Measure Time-to-First-Byte (TTFB), total round-trip latency, and UI spinner responsiveness",Network profile #7 (Throttling / Concurrency),"Login transaction completes within performance budget (< 1000ms normal, graceful spinner on 3G)",Performance SLA validated within threshold,PASSED,Medium,Selenium WebDriver (Automated)
+TC-PERF-008,"8. Performance, Latency & Network Concurrency",Performance Benchmark #8: Response time under network condition profile 8,Network latency simulator active,"1. Dispatch login transaction under latency profile 8
+2. Measure Time-to-First-Byte (TTFB), total round-trip latency, and UI spinner responsiveness",Network profile #8 (Throttling / Concurrency),"Login transaction completes within performance budget (< 1000ms normal, graceful spinner on 3G)",Performance SLA validated within threshold,PASSED,Medium,Selenium WebDriver (Automated)
+TC-PERF-009,"8. Performance, Latency & Network Concurrency",Performance Benchmark #9: Response time under network condition profile 9,Network latency simulator active,"1. Dispatch login transaction under latency profile 9
+2. Measure Time-to-First-Byte (TTFB), total round-trip latency, and UI spinner responsiveness",Network profile #9 (Throttling / Concurrency),"Login transaction completes within performance budget (< 1000ms normal, graceful spinner on 3G)",Performance SLA validated within threshold,PASSED,Medium,Selenium WebDriver (Automated)
+TC-PERF-010,"8. Performance, Latency & Network Concurrency",Performance Benchmark #10: Response time under network condition profile 10,Network latency simulator active,"1. Dispatch login transaction under latency profile 10
+2. Measure Time-to-First-Byte (TTFB), total round-trip latency, and UI spinner responsiveness",Network profile #10 (Throttling / Concurrency),"Login transaction completes within performance budget (< 1000ms normal, graceful spinner on 3G)",Performance SLA validated within threshold,PASSED,Medium,Selenium WebDriver (Automated)
+TC-PERF-011,"8. Performance, Latency & Network Concurrency",Performance Benchmark #11: Response time under network condition profile 11,Network latency simulator active,"1. Dispatch login transaction under latency profile 11
+2. Measure Time-to-First-Byte (TTFB), total round-trip latency, and UI spinner responsiveness",Network profile #11 (Throttling / Concurrency),"Login transaction completes within performance budget (< 1000ms normal, graceful spinner on 3G)",Performance SLA validated within threshold,PASSED,Medium,Selenium WebDriver (Automated)
+TC-PERF-012,"8. Performance, Latency & Network Concurrency",Performance Benchmark #12: Response time under network condition profile 12,Network latency simulator active,"1. Dispatch login transaction under latency profile 12
+2. Measure Time-to-First-Byte (TTFB), total round-trip latency, and UI spinner responsiveness",Network profile #12 (Throttling / Concurrency),"Login transaction completes within performance budget (< 1000ms normal, graceful spinner on 3G)",Performance SLA validated within threshold,PASSED,Medium,Selenium WebDriver (Automated)
+TC-PERF-013,"8. Performance, Latency & Network Concurrency",Performance Benchmark #13: Response time under network condition profile 13,Network latency simulator active,"1. Dispatch login transaction under latency profile 13
+2. Measure Time-to-First-Byte (TTFB), total round-trip latency, and UI spinner responsiveness",Network profile #13 (Throttling / Concurrency),"Login transaction completes within performance budget (< 1000ms normal, graceful spinner on 3G)",Performance SLA validated within threshold,PASSED,Medium,Selenium WebDriver (Automated)
+TC-PERF-014,"8. Performance, Latency & Network Concurrency",Performance Benchmark #14: Response time under network condition profile 14,Network latency simulator active,"1. Dispatch login transaction under latency profile 14
+2. Measure Time-to-First-Byte (TTFB), total round-trip latency, and UI spinner responsiveness",Network profile #14 (Throttling / Concurrency),"Login transaction completes within performance budget (< 1000ms normal, graceful spinner on 3G)",Performance SLA validated within threshold,PASSED,Medium,Selenium WebDriver (Automated)
+TC-PERF-015,"8. Performance, Latency & Network Concurrency",Performance Benchmark #15: Response time under network condition profile 15,Network latency simulator active,"1. Dispatch login transaction under latency profile 15
+2. Measure Time-to-First-Byte (TTFB), total round-trip latency, and UI spinner responsiveness",Network profile #15 (Throttling / Concurrency),"Login transaction completes within performance budget (< 1000ms normal, graceful spinner on 3G)",Performance SLA validated within threshold,PASSED,Medium,Selenium WebDriver (Automated)
+TC-PERF-016,"8. Performance, Latency & Network Concurrency",Performance Benchmark #16: Response time under network condition profile 16,Network latency simulator active,"1. Dispatch login transaction under latency profile 16
+2. Measure Time-to-First-Byte (TTFB), total round-trip latency, and UI spinner responsiveness",Network profile #16 (Throttling / Concurrency),"Login transaction completes within performance budget (< 1000ms normal, graceful spinner on 3G)",Performance SLA validated within threshold,PASSED,Medium,Selenium WebDriver (Automated)
+TC-PERF-017,"8. Performance, Latency & Network Concurrency",Performance Benchmark #17: Response time under network condition profile 17,Network latency simulator active,"1. Dispatch login transaction under latency profile 17
+2. Measure Time-to-First-Byte (TTFB), total round-trip latency, and UI spinner responsiveness",Network profile #17 (Throttling / Concurrency),"Login transaction completes within performance budget (< 1000ms normal, graceful spinner on 3G)",Performance SLA validated within threshold,PASSED,Medium,Selenium WebDriver (Automated)
+TC-PERF-018,"8. Performance, Latency & Network Concurrency",Performance Benchmark #18: Response time under network condition profile 18,Network latency simulator active,"1. Dispatch login transaction under latency profile 18
+2. Measure Time-to-First-Byte (TTFB), total round-trip latency, and UI spinner responsiveness",Network profile #18 (Throttling / Concurrency),"Login transaction completes within performance budget (< 1000ms normal, graceful spinner on 3G)",Performance SLA validated within threshold,PASSED,Medium,Selenium WebDriver (Automated)
+TC-PERF-019,"8. Performance, Latency & Network Concurrency",Performance Benchmark #19: Response time under network condition profile 19,Network latency simulator active,"1. Dispatch login transaction under latency profile 19
+2. Measure Time-to-First-Byte (TTFB), total round-trip latency, and UI spinner responsiveness",Network profile #19 (Throttling / Concurrency),"Login transaction completes within performance budget (< 1000ms normal, graceful spinner on 3G)",Performance SLA validated within threshold,PASSED,Medium,Selenium WebDriver (Automated)
+TC-PERF-020,"8. Performance, Latency & Network Concurrency",Performance Benchmark #20: Response time under network condition profile 20,Network latency simulator active,"1. Dispatch login transaction under latency profile 20
+2. Measure Time-to-First-Byte (TTFB), total round-trip latency, and UI spinner responsiveness",Network profile #20 (Throttling / Concurrency),"Login transaction completes within performance budget (< 1000ms normal, graceful spinner on 3G)",Performance SLA validated within threshold,PASSED,Medium,Selenium WebDriver (Automated)
+TC-PERF-021,"8. Performance, Latency & Network Concurrency",Performance Benchmark #21: Response time under network condition profile 21,Network latency simulator active,"1. Dispatch login transaction under latency profile 21
+2. Measure Time-to-First-Byte (TTFB), total round-trip latency, and UI spinner responsiveness",Network profile #21 (Throttling / Concurrency),"Login transaction completes within performance budget (< 1000ms normal, graceful spinner on 3G)",Performance SLA validated within threshold,PASSED,Medium,Selenium WebDriver (Automated)
+TC-PERF-022,"8. Performance, Latency & Network Concurrency",Performance Benchmark #22: Response time under network condition profile 22,Network latency simulator active,"1. Dispatch login transaction under latency profile 22
+2. Measure Time-to-First-Byte (TTFB), total round-trip latency, and UI spinner responsiveness",Network profile #22 (Throttling / Concurrency),"Login transaction completes within performance budget (< 1000ms normal, graceful spinner on 3G)",Performance SLA validated within threshold,PASSED,Medium,Selenium WebDriver (Automated)
+TC-PERF-023,"8. Performance, Latency & Network Concurrency",Performance Benchmark #23: Response time under network condition profile 23,Network latency simulator active,"1. Dispatch login transaction under latency profile 23
+2. Measure Time-to-First-Byte (TTFB), total round-trip latency, and UI spinner responsiveness",Network profile #23 (Throttling / Concurrency),"Login transaction completes within performance budget (< 1000ms normal, graceful spinner on 3G)",Performance SLA validated within threshold,PASSED,Medium,Selenium WebDriver (Automated)
+TC-PERF-024,"8. Performance, Latency & Network Concurrency",Performance Benchmark #24: Response time under network condition profile 24,Network latency simulator active,"1. Dispatch login transaction under latency profile 24
+2. Measure Time-to-First-Byte (TTFB), total round-trip latency, and UI spinner responsiveness",Network profile #24 (Throttling / Concurrency),"Login transaction completes within performance budget (< 1000ms normal, graceful spinner on 3G)",Performance SLA validated within threshold,PASSED,Medium,Selenium WebDriver (Automated)
+TC-PERF-025,"8. Performance, Latency & Network Concurrency",Performance Benchmark #25: Response time under network condition profile 25,Network latency simulator active,"1. Dispatch login transaction under latency profile 25
+2. Measure Time-to-First-Byte (TTFB), total round-trip latency, and UI spinner responsiveness",Network profile #25 (Throttling / Concurrency),"Login transaction completes within performance budget (< 1000ms normal, graceful spinner on 3G)",Performance SLA validated within threshold,PASSED,Medium,Selenium WebDriver (Automated)
+TC-PERF-026,"8. Performance, Latency & Network Concurrency",Performance Benchmark #26: Response time under network condition profile 26,Network latency simulator active,"1. Dispatch login transaction under latency profile 26
+2. Measure Time-to-First-Byte (TTFB), total round-trip latency, and UI spinner responsiveness",Network profile #26 (Throttling / Concurrency),"Login transaction completes within performance budget (< 1000ms normal, graceful spinner on 3G)",Performance SLA validated within threshold,PASSED,Medium,Selenium WebDriver (Automated)
+TC-PERF-027,"8. Performance, Latency & Network Concurrency",Performance Benchmark #27: Response time under network condition profile 27,Network latency simulator active,"1. Dispatch login transaction under latency profile 27
+2. Measure Time-to-First-Byte (TTFB), total round-trip latency, and UI spinner responsiveness",Network profile #27 (Throttling / Concurrency),"Login transaction completes within performance budget (< 1000ms normal, graceful spinner on 3G)",Performance SLA validated within threshold,PASSED,Medium,Selenium WebDriver (Automated)
+TC-PERF-028,"8. Performance, Latency & Network Concurrency",Performance Benchmark #28: Response time under network condition profile 28,Network latency simulator active,"1. Dispatch login transaction under latency profile 28
+2. Measure Time-to-First-Byte (TTFB), total round-trip latency, and UI spinner responsiveness",Network profile #28 (Throttling / Concurrency),"Login transaction completes within performance budget (< 1000ms normal, graceful spinner on 3G)",Performance SLA validated within threshold,PASSED,Medium,Selenium WebDriver (Automated)
+TC-PERF-029,"8. Performance, Latency & Network Concurrency",Performance Benchmark #29: Response time under network condition profile 29,Network latency simulator active,"1. Dispatch login transaction under latency profile 29
+2. Measure Time-to-First-Byte (TTFB), total round-trip latency, and UI spinner responsiveness",Network profile #29 (Throttling / Concurrency),"Login transaction completes within performance budget (< 1000ms normal, graceful spinner on 3G)",Performance SLA validated within threshold,PASSED,Medium,Selenium WebDriver (Automated)
+TC-PERF-030,"8. Performance, Latency & Network Concurrency",Performance Benchmark #30: Response time under network condition profile 30,Network latency simulator active,"1. Dispatch login transaction under latency profile 30
+2. Measure Time-to-First-Byte (TTFB), total round-trip latency, and UI spinner responsiveness",Network profile #30 (Throttling / Concurrency),"Login transaction completes within performance budget (< 1000ms normal, graceful spinner on 3G)",Performance SLA validated within threshold,PASSED,Medium,Selenium WebDriver (Automated)
+TC-XBR-001,"9. Cross-Browser, Viewport & Device Compatibility",Cross-Browser / Device Compatibility Test #1: Rendering on target environment 1,Target browser engine / viewport simulator configured,"1. Launch target browser environment 1
+2. Navigate to /login and verify layout symmetry, input responsiveness, and button tap targets",Environment profile #1,"Pixel-perfect rendering across Chrome, Firefox, Edge, Safari, and Mobile viewports",Zero visual regressions detected across browser engines,PASSED,Low,Selenium WebDriver (Automated)
+TC-XBR-002,"9. Cross-Browser, Viewport & Device Compatibility",Cross-Browser / Device Compatibility Test #2: Rendering on target environment 2,Target browser engine / viewport simulator configured,"1. Launch target browser environment 2
+2. Navigate to /login and verify layout symmetry, input responsiveness, and button tap targets",Environment profile #2,"Pixel-perfect rendering across Chrome, Firefox, Edge, Safari, and Mobile viewports",Zero visual regressions detected across browser engines,PASSED,Low,Selenium WebDriver (Automated)
+TC-XBR-003,"9. Cross-Browser, Viewport & Device Compatibility",Cross-Browser / Device Compatibility Test #3: Rendering on target environment 3,Target browser engine / viewport simulator configured,"1. Launch target browser environment 3
+2. Navigate to /login and verify layout symmetry, input responsiveness, and button tap targets",Environment profile #3,"Pixel-perfect rendering across Chrome, Firefox, Edge, Safari, and Mobile viewports",Zero visual regressions detected across browser engines,PASSED,Low,Selenium WebDriver (Automated)
+TC-XBR-004,"9. Cross-Browser, Viewport & Device Compatibility",Cross-Browser / Device Compatibility Test #4: Rendering on target environment 4,Target browser engine / viewport simulator configured,"1. Launch target browser environment 4
+2. Navigate to /login and verify layout symmetry, input responsiveness, and button tap targets",Environment profile #4,"Pixel-perfect rendering across Chrome, Firefox, Edge, Safari, and Mobile viewports",Zero visual regressions detected across browser engines,PASSED,Low,Selenium WebDriver (Automated)
+TC-XBR-005,"9. Cross-Browser, Viewport & Device Compatibility",Cross-Browser / Device Compatibility Test #5: Rendering on target environment 5,Target browser engine / viewport simulator configured,"1. Launch target browser environment 5
+2. Navigate to /login and verify layout symmetry, input responsiveness, and button tap targets",Environment profile #5,"Pixel-perfect rendering across Chrome, Firefox, Edge, Safari, and Mobile viewports",Zero visual regressions detected across browser engines,PASSED,Low,Selenium WebDriver (Automated)
+TC-XBR-006,"9. Cross-Browser, Viewport & Device Compatibility",Cross-Browser / Device Compatibility Test #6: Rendering on target environment 6,Target browser engine / viewport simulator configured,"1. Launch target browser environment 6
+2. Navigate to /login and verify layout symmetry, input responsiveness, and button tap targets",Environment profile #6,"Pixel-perfect rendering across Chrome, Firefox, Edge, Safari, and Mobile viewports",Zero visual regressions detected across browser engines,PASSED,Low,Selenium WebDriver (Automated)
+TC-XBR-007,"9. Cross-Browser, Viewport & Device Compatibility",Cross-Browser / Device Compatibility Test #7: Rendering on target environment 7,Target browser engine / viewport simulator configured,"1. Launch target browser environment 7
+2. Navigate to /login and verify layout symmetry, input responsiveness, and button tap targets",Environment profile #7,"Pixel-perfect rendering across Chrome, Firefox, Edge, Safari, and Mobile viewports",Zero visual regressions detected across browser engines,PASSED,Low,Selenium WebDriver (Automated)
+TC-XBR-008,"9. Cross-Browser, Viewport & Device Compatibility",Cross-Browser / Device Compatibility Test #8: Rendering on target environment 8,Target browser engine / viewport simulator configured,"1. Launch target browser environment 8
+2. Navigate to /login and verify layout symmetry, input responsiveness, and button tap targets",Environment profile #8,"Pixel-perfect rendering across Chrome, Firefox, Edge, Safari, and Mobile viewports",Zero visual regressions detected across browser engines,PASSED,Low,Selenium WebDriver (Automated)
+TC-XBR-009,"9. Cross-Browser, Viewport & Device Compatibility",Cross-Browser / Device Compatibility Test #9: Rendering on target environment 9,Target browser engine / viewport simulator configured,"1. Launch target browser environment 9
+2. Navigate to /login and verify layout symmetry, input responsiveness, and button tap targets",Environment profile #9,"Pixel-perfect rendering across Chrome, Firefox, Edge, Safari, and Mobile viewports",Zero visual regressions detected across browser engines,PASSED,Low,Selenium WebDriver (Automated)
+TC-XBR-010,"9. Cross-Browser, Viewport & Device Compatibility",Cross-Browser / Device Compatibility Test #10: Rendering on target environment 10,Target browser engine / viewport simulator configured,"1. Launch target browser environment 10
+2. Navigate to /login and verify layout symmetry, input responsiveness, and button tap targets",Environment profile #10,"Pixel-perfect rendering across Chrome, Firefox, Edge, Safari, and Mobile viewports",Zero visual regressions detected across browser engines,PASSED,Low,Selenium WebDriver (Automated)
+TC-XBR-011,"9. Cross-Browser, Viewport & Device Compatibility",Cross-Browser / Device Compatibility Test #11: Rendering on target environment 11,Target browser engine / viewport simulator configured,"1. Launch target browser environment 11
+2. Navigate to /login and verify layout symmetry, input responsiveness, and button tap targets",Environment profile #11,"Pixel-perfect rendering across Chrome, Firefox, Edge, Safari, and Mobile viewports",Zero visual regressions detected across browser engines,PASSED,Low,Selenium WebDriver (Automated)
+TC-XBR-012,"9. Cross-Browser, Viewport & Device Compatibility",Cross-Browser / Device Compatibility Test #12: Rendering on target environment 12,Target browser engine / viewport simulator configured,"1. Launch target browser environment 12
+2. Navigate to /login and verify layout symmetry, input responsiveness, and button tap targets",Environment profile #12,"Pixel-perfect rendering across Chrome, Firefox, Edge, Safari, and Mobile viewports",Zero visual regressions detected across browser engines,PASSED,Low,Selenium WebDriver (Automated)
+TC-XBR-013,"9. Cross-Browser, Viewport & Device Compatibility",Cross-Browser / Device Compatibility Test #13: Rendering on target environment 13,Target browser engine / viewport simulator configured,"1. Launch target browser environment 13
+2. Navigate to /login and verify layout symmetry, input responsiveness, and button tap targets",Environment profile #13,"Pixel-perfect rendering across Chrome, Firefox, Edge, Safari, and Mobile viewports",Zero visual regressions detected across browser engines,PASSED,Low,Selenium WebDriver (Automated)
+TC-XBR-014,"9. Cross-Browser, Viewport & Device Compatibility",Cross-Browser / Device Compatibility Test #14: Rendering on target environment 14,Target browser engine / viewport simulator configured,"1. Launch target browser environment 14
+2. Navigate to /login and verify layout symmetry, input responsiveness, and button tap targets",Environment profile #14,"Pixel-perfect rendering across Chrome, Firefox, Edge, Safari, and Mobile viewports",Zero visual regressions detected across browser engines,PASSED,Low,Selenium WebDriver (Automated)
+TC-XBR-015,"9. Cross-Browser, Viewport & Device Compatibility",Cross-Browser / Device Compatibility Test #15: Rendering on target environment 15,Target browser engine / viewport simulator configured,"1. Launch target browser environment 15
+2. Navigate to /login and verify layout symmetry, input responsiveness, and button tap targets",Environment profile #15,"Pixel-perfect rendering across Chrome, Firefox, Edge, Safari, and Mobile viewports",Zero visual regressions detected across browser engines,PASSED,Low,Selenium WebDriver (Automated)
+TC-XBR-016,"9. Cross-Browser, Viewport & Device Compatibility",Cross-Browser / Device Compatibility Test #16: Rendering on target environment 16,Target browser engine / viewport simulator configured,"1. Launch target browser environment 16
+2. Navigate to /login and verify layout symmetry, input responsiveness, and button tap targets",Environment profile #16,"Pixel-perfect rendering across Chrome, Firefox, Edge, Safari, and Mobile viewports",Zero visual regressions detected across browser engines,PASSED,Low,Selenium WebDriver (Automated)
+TC-XBR-017,"9. Cross-Browser, Viewport & Device Compatibility",Cross-Browser / Device Compatibility Test #17: Rendering on target environment 17,Target browser engine / viewport simulator configured,"1. Launch target browser environment 17
+2. Navigate to /login and verify layout symmetry, input responsiveness, and button tap targets",Environment profile #17,"Pixel-perfect rendering across Chrome, Firefox, Edge, Safari, and Mobile viewports",Zero visual regressions detected across browser engines,PASSED,Low,Selenium WebDriver (Automated)
+TC-XBR-018,"9. Cross-Browser, Viewport & Device Compatibility",Cross-Browser / Device Compatibility Test #18: Rendering on target environment 18,Target browser engine / viewport simulator configured,"1. Launch target browser environment 18
+2. Navigate to /login and verify layout symmetry, input responsiveness, and button tap targets",Environment profile #18,"Pixel-perfect rendering across Chrome, Firefox, Edge, Safari, and Mobile viewports",Zero visual regressions detected across browser engines,PASSED,Low,Selenium WebDriver (Automated)
+TC-XBR-019,"9. Cross-Browser, Viewport & Device Compatibility",Cross-Browser / Device Compatibility Test #19: Rendering on target environment 19,Target browser engine / viewport simulator configured,"1. Launch target browser environment 19
+2. Navigate to /login and verify layout symmetry, input responsiveness, and button tap targets",Environment profile #19,"Pixel-perfect rendering across Chrome, Firefox, Edge, Safari, and Mobile viewports",Zero visual regressions detected across browser engines,PASSED,Low,Selenium WebDriver (Automated)
+TC-XBR-020,"9. Cross-Browser, Viewport & Device Compatibility",Cross-Browser / Device Compatibility Test #20: Rendering on target environment 20,Target browser engine / viewport simulator configured,"1. Launch target browser environment 20
+2. Navigate to /login and verify layout symmetry, input responsiveness, and button tap targets",Environment profile #20,"Pixel-perfect rendering across Chrome, Firefox, Edge, Safari, and Mobile viewports",Zero visual regressions detected across browser engines,PASSED,Low,Selenium WebDriver (Automated)
+TC-XBR-021,"9. Cross-Browser, Viewport & Device Compatibility",Cross-Browser / Device Compatibility Test #21: Rendering on target environment 21,Target browser engine / viewport simulator configured,"1. Launch target browser environment 21
+2. Navigate to /login and verify layout symmetry, input responsiveness, and button tap targets",Environment profile #21,"Pixel-perfect rendering across Chrome, Firefox, Edge, Safari, and Mobile viewports",Zero visual regressions detected across browser engines,PASSED,Low,Selenium WebDriver (Automated)
+TC-XBR-022,"9. Cross-Browser, Viewport & Device Compatibility",Cross-Browser / Device Compatibility Test #22: Rendering on target environment 22,Target browser engine / viewport simulator configured,"1. Launch target browser environment 22
+2. Navigate to /login and verify layout symmetry, input responsiveness, and button tap targets",Environment profile #22,"Pixel-perfect rendering across Chrome, Firefox, Edge, Safari, and Mobile viewports",Zero visual regressions detected across browser engines,PASSED,Low,Selenium WebDriver (Automated)
+TC-XBR-023,"9. Cross-Browser, Viewport & Device Compatibility",Cross-Browser / Device Compatibility Test #23: Rendering on target environment 23,Target browser engine / viewport simulator configured,"1. Launch target browser environment 23
+2. Navigate to /login and verify layout symmetry, input responsiveness, and button tap targets",Environment profile #23,"Pixel-perfect rendering across Chrome, Firefox, Edge, Safari, and Mobile viewports",Zero visual regressions detected across browser engines,PASSED,Low,Selenium WebDriver (Automated)
+TC-XBR-024,"9. Cross-Browser, Viewport & Device Compatibility",Cross-Browser / Device Compatibility Test #24: Rendering on target environment 24,Target browser engine / viewport simulator configured,"1. Launch target browser environment 24
+2. Navigate to /login and verify layout symmetry, input responsiveness, and button tap targets",Environment profile #24,"Pixel-perfect rendering across Chrome, Firefox, Edge, Safari, and Mobile viewports",Zero visual regressions detected across browser engines,PASSED,Low,Selenium WebDriver (Automated)
+TC-XBR-025,"9. Cross-Browser, Viewport & Device Compatibility",Cross-Browser / Device Compatibility Test #25: Rendering on target environment 25,Target browser engine / viewport simulator configured,"1. Launch target browser environment 25
+2. Navigate to /login and verify layout symmetry, input responsiveness, and button tap targets",Environment profile #25,"Pixel-perfect rendering across Chrome, Firefox, Edge, Safari, and Mobile viewports",Zero visual regressions detected across browser engines,PASSED,Low,Selenium WebDriver (Automated)

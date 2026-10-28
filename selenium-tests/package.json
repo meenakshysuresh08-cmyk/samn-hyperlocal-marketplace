@@ -1,0 +1,15 @@
+{
+  "name": "samn-selenium-tests",
+  "version": "1.0.0",
+  "description": "Selenium WebDriver E2E Automation Testing Suite for SAMN Web App",
+  "main": "tests/login-tests.js",
+  "scripts": {
+    "test:login": "node tests/login-tests.js",
+    "generate:report": "node scripts/generate-excel-report.js"
+  },
+  "dependencies": {
+    "chromedriver": "^131.0.0",
+    "selenium-webdriver": "^4.48.0",
+    "xlsx": "^0.18.5"
+  }
+}
