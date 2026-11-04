@@ -126,7 +126,7 @@ export const AppButton: React.FC<AppButtonProps> = ({
             start={resolvedGradientStart}
             end={resolvedGradientEnd}
             locations={resolvedGradientLocations}
-            style={StyleSheet.absoluteFillObject}
+            style={StyleSheet.absoluteFill}
           />
         ) : null}
 

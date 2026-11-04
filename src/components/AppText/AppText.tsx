@@ -65,7 +65,7 @@ export const AppText = forwardRef<RNText, AppTextProps>((props, ref) => {
   return (
     <RNText
       {...rest}
-      ref={ref}
+      ref={ref as any}
       style={[presetStyles, sizeStyle, weightFont && { fontFamily: weightFont }, rtlStyle, override]}
     >
       {content}

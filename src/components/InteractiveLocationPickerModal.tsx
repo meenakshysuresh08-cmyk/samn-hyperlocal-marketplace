@@ -24,6 +24,7 @@ import {
 } from '../services/locationService';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+const WebViewComponent: any = WebView;
 
 interface InteractiveLocationPickerModalProps {
   visible: boolean;
@@ -341,7 +342,7 @@ export const InteractiveLocationPickerModal: React.FC<InteractiveLocationPickerM
 
           {/* Map View Area */}
           <View style={styles.mapWrapper}>
-            <WebView
+            <WebViewComponent
               ref={webViewRef}
               originWhitelist={['*']}
               source={{ html: generatePickerMapHTML() }}

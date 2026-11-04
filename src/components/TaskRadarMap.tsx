@@ -17,6 +17,7 @@ import { useAuthStore } from '../services/authStore';
 import { requestDeviceLocation } from '../services/locationService';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const WebViewComponent: any = WebView;
 
 interface TaskRadarMapProps {
   tasks: TaskItem[];
@@ -295,7 +296,7 @@ export const TaskRadarMap: React.FC<TaskRadarMapProps> = ({
 
       {/* Real Interactive Map View Container */}
       <View style={styles.mapCardWrapper}>
-        <WebView
+        <WebViewComponent
           key={`radar-map-${searchRadius}-${tasks.length}-${userLng}-${userLat}`}
           ref={webViewRef}
           originWhitelist={['*']}

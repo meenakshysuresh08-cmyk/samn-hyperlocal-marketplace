@@ -48,6 +48,24 @@ const createTask = async (req, res) => {
     }
 
     const cleanCoordinates = [parseFloat(coordinates[0]), parseFloat(coordinates[1])];
+    
+    // Validate coordinate ranges
+    const lng = cleanCoordinates[0];
+    const lat = cleanCoordinates[1];
+    if (lng < -180 || lng > 180 || lat < -90 || lat > 90) {
+      return res.status(400).json({
+        success: false,
+        message: 'Coordinates must be within valid ranges: longitude (-180 to 180), latitude (-90 to 90)',
+      });
+    }
+    
+    // Reject [0, 0] coordinates (Gulf of Guinea, not Bengaluru)
+    if (lng === 0 && lat === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid location: coordinates [0, 0] is in the Gulf of Guinea. Please select a valid location.',
+      });
+    }
 
     const isForSelf = forSelf !== undefined ? Boolean(forSelf) : true;
 
@@ -182,12 +200,10 @@ const getNearbyTasks = async (req, res) => {
     const userLng = req.user?.location?.coordinates?.[0];
     const userLat = req.user?.location?.coordinates?.[1];
 
-    const lng = !isNaN(queryLng)
-      ? queryLng
-      : (typeof userLng === 'number' && !isNaN(userLng) && (userLng !== 0 || userLat !== 0) ? userLng : 77.5946);
-    const lat = !isNaN(queryLat)
-      ? queryLat
-      : (typeof userLat === 'number' && !isNaN(userLat) && (userLng !== 0 || userLat !== 0) ? userLat : 12.9716);
+    // Use query coordinates if provided, otherwise use user's location
+    // Default to Bengaluru center only if absolutely necessary
+    const lng = !isNaN(queryLng) ? queryLng : (typeof userLng === 'number' && !isNaN(userLng) && (userLng !== 0 || userLat !== 0) ? userLng : 77.5946);
+    const lat = !isNaN(queryLat) ? queryLat : (typeof userLat === 'number' && !isNaN(userLat) && (userLng !== 0 || userLat !== 0) ? userLat : 12.9716);
 
     const radiusInMeters = parseInt(req.query.radius, 10) || 25000;
     const category = req.query.category;
@@ -199,9 +215,11 @@ const getNearbyTasks = async (req, res) => {
       status: { $in: ['open', 'broadcasted'] },
     };
 
-    // Authoritative server-side filter: exclude creator's own tasks from available helper feed
+    // Server-side filter: exclude creator's own tasks from available helper feed
+    // This is the PRIMARY and AUTHORIZED filter - we trust the backend to enforce this
     if (req.user && req.user._id) {
-      matchQuery.customerId = { $ne: req.user._id };
+      const userIdStr = String(req.user._id);
+      matchQuery.customerId = { $ne: userIdStr };
     }
 
     if (category && category !== 'all') {
@@ -218,16 +236,22 @@ const getNearbyTasks = async (req, res) => {
       if (!isNaN(maxBudget)) matchQuery['budget.amount'].$lte = maxBudget;
     }
 
+    // Validate coordinates before geospatial query
+    const validLng = typeof lng === 'number' && !isNaN(lng) && lng >= -180 && lng <= 180;
+    const validLat = typeof lat === 'number' && !isNaN(lat) && lat >= -90 && lat <= 90;
+
     // Geospatial lookup
-    matchQuery.location = {
-      $near: {
-        $geometry: {
-          type: 'Point',
-          coordinates: [lng, lat],
+    if (validLng && validLat) {
+      matchQuery.location = {
+        $near: {
+          $geometry: {
+            type: 'Point',
+            coordinates: [lng, lat],
+          },
+          $maxDistance: radiusInMeters,
         },
-        $maxDistance: radiusInMeters,
-      },
-    };
+      };
+    }
 
     let tasks;
     try {
@@ -239,7 +263,7 @@ const getNearbyTasks = async (req, res) => {
         })
         .limit(50);
     } catch (geoErr) {
-      console.warn('Geospatial lookup fallback:', geoErr.message);
+      console.warn('[Task Controller] Geospatial lookup fallback:', geoErr.message);
       delete matchQuery.location;
       tasks = await Task.find(matchQuery)
         .populate('customerId', 'name avatar stats isVerified')
@@ -257,6 +281,8 @@ const getNearbyTasks = async (req, res) => {
       .map((task) => {
         const doc = task.toObject();
         const tCoords = task.location?.coordinates;
+        
+        // Strict validation: coordinates must be valid arrays with proper ranges
         if (
           Array.isArray(tCoords) &&
           tCoords.length >= 2 &&
@@ -264,12 +290,22 @@ const getNearbyTasks = async (req, res) => {
           typeof tCoords[1] === 'number' &&
           !isNaN(tCoords[0]) &&
           !isNaN(tCoords[1]) &&
-          (tCoords[0] !== 0 || tCoords[1] !== 0)
+          tCoords[0] >= -180 &&
+          tCoords[0] <= 180 &&
+          tCoords[1] >= -90 &&
+          tCoords[1] <= 90 &&
+          // Exclude [0, 0] which is Gulf of Guinea, not Bengaluru
+          !(tCoords[0] === 0 && tCoords[1] === 0)
         ) {
           doc.distanceKm = calculateDistanceKm([lng, lat], tCoords);
-          return doc;
+          
+          // Final validation: distance must be a valid positive number
+          if (doc.distanceKm !== null && doc.distanceKm >= 0 && !isNaN(doc.distanceKm)) {
+            return doc;
+          }
         }
-        // Never assign fabricated distance! Exclude missing or invalid coordinates from nearby feed
+        
+        // Exclude tasks with invalid/missing coordinates from nearby feed
         doc.distanceKm = null;
         return doc;
       })
@@ -488,8 +524,7 @@ const submitBid = async (req, res) => {
       console.warn('Notification skipped:', notifErr.message);
     }
 
-    emitToUser(task.customerId._id, 'notification', notification);
-    emitToUser(task.customerId._id, 'bid_received', { taskId: task._id, bid: populatedBid });
+    emitToUser(customerId, 'bid_received', { taskId: task._id, bid: populatedBid });
     emitToTaskRoom(task._id, 'bid_received', { taskId: task._id, bid: populatedBid });
 
     const updatedTask = await Task.findById(taskId)
@@ -501,7 +536,7 @@ const submitBid = async (req, res) => {
       })
       .populate('selectedBid');
 
-    emitToUser(task.customerId._id, 'task_updated', updatedTask);
+    emitToUser(customerId, 'task_updated', updatedTask);
     emitToTaskRoom(taskId, 'task_updated', updatedTask);
     broadcastToAll('task_updated', updatedTask);
 
@@ -744,19 +779,30 @@ const submitProof = async (req, res) => {
     await task.save();
 
     // Increment helper stats
-    await User.findByIdAndUpdate(req.user._id, {
-      $inc: {
-        'stats.tasksCompleted': 1,
-        'stats.totalEarned': task.budget.amount,
+    const updatedHelper = await User.findByIdAndUpdate(
+      req.user._id,
+      {
+        $inc: {
+          'stats.tasksCompleted': 1,
+          'stats.totalEarned': task.budget.amount,
+        },
       },
-    });
+      { new: true }
+    ).select('-passwordHash');
 
     // Increment customer stats
-    await User.findByIdAndUpdate(task.customerId._id, {
-      $inc: {
-        'stats.totalSpent': task.budget.amount,
+    const updatedCustomer = await User.findByIdAndUpdate(
+      task.customerId._id,
+      {
+        $inc: {
+          'stats.totalSpent': task.budget.amount,
+        },
       },
-    });
+      { new: true }
+    ).select('-passwordHash');
+
+    if (updatedHelper) emitToUser(req.user._id, 'user_updated', updatedHelper);
+    if (updatedCustomer) emitToUser(task.customerId._id, 'user_updated', updatedCustomer);
 
     const notif = await Notification.create({
       userId: task.customerId._id,
@@ -827,12 +873,20 @@ const approveCompletion = async (req, res) => {
     await task.save();
 
     if (task.helperId) {
-      await User.findByIdAndUpdate(task.helperId._id, {
-        $inc: {
-          'stats.tasksCompleted': 1,
-          'stats.totalEarned': task.budget.amount,
+      const updatedHelper = await User.findByIdAndUpdate(
+        task.helperId._id,
+        {
+          $inc: {
+            'stats.tasksCompleted': 1,
+            'stats.totalEarned': task.budget.amount,
+          },
         },
-      });
+        { new: true }
+      ).select('-passwordHash');
+
+      if (updatedHelper) {
+        emitToUser(task.helperId._id, 'user_updated', updatedHelper);
+      }
 
       const notif = await Notification.create({
         userId: task.helperId._id,
@@ -842,6 +896,21 @@ const approveCompletion = async (req, res) => {
         data: { taskId: task._id },
       });
       emitToUser(task.helperId._id, 'notification', notif);
+    }
+
+    // Increment customer stats: totalSpent
+    const updatedCustomer = await User.findByIdAndUpdate(
+      task.customerId._id,
+      {
+        $inc: {
+          'stats.totalSpent': task.budget.amount,
+        },
+      },
+      { new: true }
+    ).select('-passwordHash');
+
+    if (updatedCustomer) {
+      emitToUser(task.customerId._id, 'user_updated', updatedCustomer);
     }
 
     emitToTaskRoom(task._id, 'task_status_changed', task);

@@ -1,0 +1,58 @@
+MongoDB Atlas Connection Diagnostic
+=====================================
+
+✅ Your IP is whitelisted (0.0.0.0/0) - this is GOOD
+
+The connection is still failing. Here's what to check:
+
+1. CLUSTER STATUS
+   - Go to https://cloud.mongodb.com
+   - Look at your cluster name
+   - Is it PAUSED? If yes, click RESUME button
+   - Atlas free clusters pause after 15 minutes of inactivity
+
+2. NETWORK FIREWALL
+   - Are you on a corporate/school network?
+   - Is port 27017 blocked by firewall?
+   - Try connecting from home/mobile hotspot
+
+3. PASSWORD VERIFICATION
+   - Check the password in your .env file
+   - The password contains: 1jAyG11dVtnNW5GN
+   - If password has special characters, they need URL encoding
+   - Special characters: @ # $ % ^ & * ( ) ! ? etc.
+
+4. CONNECTION STRING FORMAT
+   - Correct format: mongodb+srv://user:pass@cluster.mongodb.net/db
+   - Your current string uses the old format with multiple hosts
+
+SOLUTION OPTIONS:
+
+Option A: Use MongoDB Atlas Connection String (Recommended)
+------------------------------------------------------------
+1. Go to https://cloud.mongodb.com
+2. Click "Connect" on your cluster
+3. Choose "Connect your application"
+4. Copy the connection string (looks like: mongodb+srv://user:pass@cluster.mongodb.net/db)
+5. Replace the MONGODB_URI in your .env file
+
+Option B: Resume Paused Cluster
+-------------------------------
+1. Go to https://cloud.mongodb.com
+2. Find your cluster
+3. If it shows "PAUSED", click RESUME
+4. Wait 1-2 minutes
+5. Restart your server
+
+Option C: Try from Different Network
+------------------------------------
+1. Switch to mobile hotspot
+2. Or use home WiFi instead of office/school network
+3. Corporate networks often block MongoDB ports
+
+To check if cluster is paused:
+- Look for "PAUSED" status in cluster view
+- Check if cluster shows "Active" or "Paused"
+
+MongoDB Atlas free clusters automatically pause after 15 minutes
+of inactivity to save resources.

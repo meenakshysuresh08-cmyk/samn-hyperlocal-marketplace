@@ -1,10 +1,10 @@
 import { AppTheme } from './themes';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, ViewStyle, TextStyle, ImageStyle } from 'react-native';
 
 export function createThemedStyles<
-  T extends StyleSheet.NamedStyles<T>,
-  P extends any[],
+  T extends { [K in keyof T]: ViewStyle | TextStyle | ImageStyle },
+  P extends any[] = any[],
 >(styles: (theme: AppTheme, ...args: P) => T) {
-  return (theme: AppTheme, ...args: P) =>
-    StyleSheet.create(styles(theme, ...args));
+  return (theme: AppTheme, ...args: P): T =>
+    StyleSheet.create(styles(theme, ...args)) as T;
 }

@@ -40,12 +40,13 @@ export const registerForPushNotifications = async (): Promise<string | null> => 
     // 1. Request OS level permissions safely
     let finalStatus = 'undetermined';
     try {
-      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      const permRes = (await Notifications.getPermissionsAsync()) as any;
+      const existingStatus = permRes?.status || 'undetermined';
       finalStatus = existingStatus;
 
       if (existingStatus !== 'granted') {
-        const { status } = await Notifications.requestPermissionsAsync();
-        finalStatus = status;
+        const reqRes = (await Notifications.requestPermissionsAsync()) as any;
+        finalStatus = reqRes?.status || 'undetermined';
       }
     } catch (permErr) {
       // Permission query fallback

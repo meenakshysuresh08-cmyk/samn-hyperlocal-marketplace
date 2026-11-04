@@ -49,7 +49,7 @@ export const AppInputPassword: React.FC<AppInputPasswordProps> = ({
   const isRTL = useIsRTL();
   
   const [secure, setSecure] = useState(true);
-  const inputRef = useRef<TextInput>(null);
+  const inputRef = useRef<any>(null);
 
   return (
     <KeyboardAvoidingView

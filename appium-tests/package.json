@@ -1,0 +1,25 @@
+{
+  "name": "samn-appium-tests",
+  "version": "1.0.0",
+  "description": "Appium Mobile E2E Automation Testing Suite for SAMN React Native / Expo App",
+  "main": "tests/app-e2e.test.js",
+  "scripts": {
+    "test:app": "node tests/app-e2e.test.js",
+    "generate:report": "node scripts/generate-excel-report.js"
+  },
+  "dependencies": {
+    "webdriverio": "^8.36.0",
+    "xlsx": "^0.18.5"
+  },
+  "keywords": [
+    "appium",
+    "webdriverio",
+    "react-native",
+    "expo",
+    "e2e-testing",
+    "automation"
+  ],
+  "author": "SAMN Quality Assurance Team",
+  "license": "ISC"
+}
+

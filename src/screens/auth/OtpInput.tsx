@@ -12,7 +12,7 @@ type OtpInputProps = {
 };
 
 export const OtpInput: React.FC<OtpInputProps> = ({ value, onChange }) => {
-  const inputRef = useRef<TextInput>(null);
+  const inputRef = useRef<any>(null);
   const [focused, setFocused] = useState(false);
 
   const digits = value.padEnd(OTP_LENGTH, ' ').slice(0, OTP_LENGTH).split('');

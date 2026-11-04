@@ -12,7 +12,11 @@ import { colors, fontSizes, fontWeights, spacing } from '../../theme/tokens';
 import { AppIcon } from '../../components/AppIcon';
 
 export const ProfileScreen = ({ navigation }: any) => {
-  const { user, switchRole, logout } = useAuthStore();
+  const { user, switchRole, logout, refreshUser } = useAuthStore();
+
+  React.useEffect(() => {
+    if (refreshUser) refreshUser();
+  }, []);
 
   const isCustomer = user?.activeRole === 'customer';
 
@@ -51,22 +55,22 @@ export const ProfileScreen = ({ navigation }: any) => {
 
       {/* Stats Summary */}
       <View style={styles.statsCard}>
-        <Text style={styles.statsHeader}>Reputation & Activity</Text>
+        <Text style={styles.statsHeader}>Reputation & Financial Activity</Text>
         <View style={styles.statsGrid}>
           <View style={styles.statItem}>
-            <Text style={styles.statLabel}>Helper Rating</Text>
-            <Text style={[styles.statVal, { color: '#fbbf24' }]}>
-              ⭐ {user?.stats?.avgRatingAsHelper || '5.0'}
+            <Text style={styles.statLabel}>Total Spent</Text>
+            <Text style={[styles.statVal, { color: '#f59e0b' }]}>
+              ₹{user?.stats?.totalSpent || 0}
             </Text>
-            <Text style={styles.statSub}>{user?.stats?.ratingCountHelper || 0} reviews</Text>
+            <Text style={styles.statSub}>As Customer</Text>
           </View>
 
           <View style={styles.statItem}>
-            <Text style={styles.statLabel}>Customer Rating</Text>
-            <Text style={[styles.statVal, { color: '#fbbf24' }]}>
-              ⭐ {user?.stats?.avgRatingAsCustomer || '5.0'}
+            <Text style={styles.statLabel}>Total Earned</Text>
+            <Text style={[styles.statVal, { color: '#10b981' }]}>
+              ₹{user?.stats?.totalEarned || 0}
             </Text>
-            <Text style={styles.statSub}>{user?.stats?.ratingCountCustomer || 0} reviews</Text>
+            <Text style={styles.statSub}>As Helper</Text>
           </View>
 
           <View style={styles.statItem}>
@@ -76,11 +80,11 @@ export const ProfileScreen = ({ navigation }: any) => {
           </View>
 
           <View style={styles.statItem}>
-            <Text style={styles.statLabel}>Total Earned</Text>
-            <Text style={[styles.statVal, { color: '#10b981' }]}>
-              ₹{user?.stats?.totalEarned || 0}
+            <Text style={styles.statLabel}>Rating</Text>
+            <Text style={[styles.statVal, { color: '#fbbf24' }]}>
+              ⭐ {isCustomer ? (user?.stats?.avgRatingAsCustomer || '5.0') : (user?.stats?.avgRatingAsHelper || '5.0')}
             </Text>
-            <Text style={styles.statSub}>Direct earnings</Text>
+            <Text style={styles.statSub}>{isCustomer ? 'As Customer' : 'As Helper'}</Text>
           </View>
         </View>
       </View>

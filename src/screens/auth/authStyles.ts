@@ -50,7 +50,7 @@ export const authStyles = StyleSheet.create({
     paddingVertical: spacing.lg,
   },
   decorContainer: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     alignItems: 'center',
     overflow: 'hidden',
   },
@@ -73,7 +73,7 @@ export const authStyles = StyleSheet.create({
     width: '100%',
   },
   logoDecorWrap: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'visible',

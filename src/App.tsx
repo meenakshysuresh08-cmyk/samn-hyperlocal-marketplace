@@ -41,7 +41,7 @@ const App = () => {
           style={[styles.safeArea, { backgroundColor: theme.background }]}
           edges={['top', 'left', 'right']}
         >
-          <StatusBar barStyle={theme.statusBarStyle} backgroundColor={theme.statusBar} />
+          <StatusBar barStyle={theme.statusBarStyle as any} {...({ backgroundColor: theme.statusBar } as any)} />
           <NavigationContainer theme={colors.navigation}>
             <RootNavigator />
           </NavigationContainer>

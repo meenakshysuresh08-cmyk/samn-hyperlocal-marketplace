@@ -38,6 +38,7 @@ interface AuthState {
   register: (userData: any) => Promise<{ success: boolean; message?: string }>;
   switchRole: (newRole: 'customer' | 'helper') => Promise<{ success: boolean }>;
   updateLocation: (coords: [number, number], address?: string) => Promise<void>;
+  refreshUser: () => Promise<void>;
   logout: () => void;
 }
 
@@ -101,6 +102,15 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         address: address || 'Current Location',
       });
       set({ user: res.data.data });
+    } catch (err) {}
+  },
+
+  refreshUser: async () => {
+    try {
+      const res = await API.get('/auth/me');
+      if (res.data?.data) {
+        set({ user: res.data.data });
+      }
     } catch (err) {}
   },
 

@@ -63,7 +63,7 @@ export const AppTextArea: React.FC<AppTextAreaProps> = ({
   const theme = useThemeStore(s => s.theme);
   const isRTL = useIsRTL();
 
-  const inputRef = useRef<TextInput>(null);
+  const inputRef = useRef<any>(null);
   const [focused, setFocused] = useState(false);
   const [height, setHeight] = useState(minHeight);
 

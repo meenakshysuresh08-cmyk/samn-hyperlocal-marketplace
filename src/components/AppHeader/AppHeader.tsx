@@ -26,14 +26,14 @@ const useGradientHeaderStatusBar = (headerColor: string) => {
     useCallback(() => {
       StatusBar.setBarStyle('light-content');
       if (Platform.OS === 'android') {
-        StatusBar.setBackgroundColor(headerColor);
-        StatusBar.setTranslucent(true);
+        (StatusBar as any).setBackgroundColor?.(headerColor);
+        (StatusBar as any).setTranslucent?.(true);
       }
       return () => {
         StatusBar.setBarStyle(theme.statusBarStyle);
         if (Platform.OS === 'android') {
-          StatusBar.setBackgroundColor(theme.statusBar);
-          StatusBar.setTranslucent(false);
+          (StatusBar as any).setBackgroundColor?.(theme.statusBar);
+          (StatusBar as any).setTranslucent?.(false);
         }
       };
     }, [headerColor, theme.statusBar, theme.statusBarStyle]),

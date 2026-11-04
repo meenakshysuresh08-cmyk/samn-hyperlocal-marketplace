@@ -42,7 +42,7 @@ export const AppIcon: React.FC<AppIconProps> = ({
     resolved = name as IconSource;
   }
 
-  const flipStyle = rtlFlip && isRTL ? [{ scaleX: -1 }] : undefined;
+  const flipStyle = rtlFlip && isRTL ? ({ transform: [{ scaleX: -1 }] } as any) : undefined;
   const isInteractive = pressable && typeof onPress === 'function';
   const Wrapper = isInteractive ? TouchableOpacity : View;
 

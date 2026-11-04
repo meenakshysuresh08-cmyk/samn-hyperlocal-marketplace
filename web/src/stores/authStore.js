@@ -27,7 +27,13 @@ export const useAuthStore = create((set, get) => ({
       const user = res.data.data;
       
       set({ user, isAuthenticated: true, isLoading: false });
-      initializeSocket(token);
+      const s = initializeSocket(token);
+      if (s) {
+        s.off('user_updated');
+        s.on('user_updated', (updatedUser) => {
+          if (updatedUser) set({ user: updatedUser });
+        });
+      }
 
       // Try fetching current browser geolocation and resolving real standard address
       if (navigator.geolocation) {
@@ -88,7 +94,13 @@ export const useAuthStore = create((set, get) => ({
 
       localStorage.setItem('samn_token', token);
       set({ user, token, isAuthenticated: true, isLoading: false });
-      initializeSocket(token);
+      const s = initializeSocket(token);
+      if (s) {
+        s.off('user_updated');
+        s.on('user_updated', (updatedUser) => {
+          if (updatedUser) set({ user: updatedUser });
+        });
+      }
       return { success: true };
     } catch (err) {
       const msg = err.response?.data?.message || 'Registration failed';
@@ -106,7 +118,13 @@ export const useAuthStore = create((set, get) => ({
 
       localStorage.setItem('samn_token', token);
       set({ user, token, isAuthenticated: true, isLoading: false });
-      initializeSocket(token);
+      const s = initializeSocket(token);
+      if (s) {
+        s.off('user_updated');
+        s.on('user_updated', (updatedUser) => {
+          if (updatedUser) set({ user: updatedUser });
+        });
+      }
       return { success: true };
     } catch (err) {
       const msg = err.response?.data?.message || 'Invalid credentials';
@@ -141,6 +159,19 @@ export const useAuthStore = create((set, get) => ({
     } catch (err) {
       set({ isLoading: false });
       return { success: false, message: err.response?.data?.message || 'Failed to update profile' };
+    }
+  },
+
+  // Refresh current user stats and profile from backend
+  refreshUser: async () => {
+    try {
+      const res = await API.get('/auth/me');
+      if (res.data?.data) {
+        set({ user: res.data.data });
+        return res.data.data;
+      }
+    } catch (err) {
+      console.warn('Failed to refresh user:', err.message);
     }
   },
 

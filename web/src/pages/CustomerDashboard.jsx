@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 
 export default function CustomerDashboard({ onOpenPostModal }) {
-  const { user } = useAuthStore();
+  const { user, refreshUser } = useAuthStore();
   const { myTasks, fetchMyTasks, isLoading } = useTaskStore();
   const { conversations, loadConversations } = useChatStore();
   const [activeTab, setActiveTab] = useState('active'); // 'active', 'completed', 'all'
@@ -27,11 +27,15 @@ export default function CustomerDashboard({ onOpenPostModal }) {
   useEffect(() => {
     fetchMyTasks('customer');
     loadConversations();
+    if (refreshUser) refreshUser();
   }, []);
 
   const openTasks = myTasks.filter((t) => ['open', 'broadcasted', 'assigned', 'in_progress'].includes(t.status));
   const completedTasks = myTasks.filter((t) => t.status === 'completed');
-  const totalSpent = user?.stats?.totalSpent || 0;
+  const calculatedSpent = completedTasks.reduce((sum, t) => sum + (t.budget?.amount || 0), 0);
+  const totalSpent = (user?.stats?.totalSpent && user.stats.totalSpent > 0)
+    ? user.stats.totalSpent
+    : calculatedSpent;
 
   const displayedTasks = activeTab === 'active' ? openTasks : activeTab === 'completed' ? completedTasks : myTasks;
 

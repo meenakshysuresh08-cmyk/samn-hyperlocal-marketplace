@@ -181,46 +181,103 @@ export default function LiveTrackingMap({ task, currentUser, isCustomer, isAssig
     };
   }, [isSimulating, customerCoords, socket, task?._id]);
 
-  // Custom icons
+  // HTML escape helper for marker templates
+  const escapeHtml = (str) => {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  };
+
+  // Derive resolved names for Customer/User and Helper
+  const customerName = useMemo(() => {
+    return (
+      task.customerId?.name ||
+      (isCustomer && currentUser?.name ? currentUser.name : null) ||
+      task.recipientName ||
+      'Customer'
+    );
+  }, [task.customerId?.name, isCustomer, currentUser?.name, task.recipientName]);
+
+  const helperName = useMemo(() => {
+    return (
+      task.helperId?.name ||
+      (isAssignedHelper && currentUser?.name ? currentUser.name : null) ||
+      'Helper'
+    );
+  }, [task.helperId?.name, isAssignedHelper, currentUser?.name]);
+
+  const customerAvatar = useMemo(() => {
+    return (
+      task.customerId?.avatar ||
+      (isCustomer && currentUser?.avatar ? currentUser.avatar : null) ||
+      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&h=80&fit=crop'
+    );
+  }, [task.customerId?.avatar, isCustomer, currentUser?.avatar]);
+
+  const helperAvatar = useMemo(() => {
+    return (
+      task.helperId?.avatar ||
+      (isAssignedHelper && currentUser?.avatar ? currentUser.avatar : null) ||
+      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop'
+    );
+  }, [task.helperId?.avatar, isAssignedHelper, currentUser?.avatar]);
+
+  // Custom icons showing actual user and helper names directly on the map
   const customerIcon = useMemo(() => {
+    const escapedName = escapeHtml(customerName);
     return L.divIcon({
       className: 'custom-customer-pin',
       html: `
-        <div style="position: relative; width: 44px; height: 44px; display: flex; items-center; justify-content: center;">
-          <div style="position: absolute; inset: 0; background: rgba(99, 102, 241, 0.35); border-radius: 9999px; animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;"></div>
-          <div style="position: relative; width: 38px; height: 38px; border-radius: 9999px; background: #6366f1; border: 3px solid #ffffff; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4); overflow: hidden;">
-            <img src="${task.customerId?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&h=80&fit=crop'}" style="width: 100%; height: 100%; object-fit: cover;" />
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 130px; pointer-events: none;">
+          <div style="background: rgba(15, 23, 42, 0.95); color: #ffffff; font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 9999px; border: 1.5px solid #818cf8; box-shadow: 0 4px 12px rgba(0,0,0,0.6); white-space: nowrap; max-width: 125px; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px; text-align: center;">
+            👤 ${escapedName}
           </div>
-          <div style="position: absolute; bottom: -6px; background: #4338ca; color: #fff; font-size: 9px; font-weight: 800; padding: 1px 5px; border-radius: 6px; border: 1px solid #818cf8; white-space: nowrap;">
-            📍 Customer
+          <div style="position: relative; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;">
+            <div style="position: absolute; inset: 0; background: rgba(99, 102, 241, 0.35); border-radius: 9999px; animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;"></div>
+            <div style="position: relative; width: 38px; height: 38px; border-radius: 9999px; background: #6366f1; border: 3px solid #ffffff; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4); overflow: hidden;">
+              <img src="${customerAvatar}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&h=80&fit=crop'" />
+            </div>
+          </div>
+          <div style="background: #4338ca; color: #e0e7ff; font-size: 9px; font-weight: 800; padding: 1px 6px; border-radius: 6px; border: 1px solid #818cf8; margin-top: -4px; white-space: nowrap; box-shadow: 0 2px 6px rgba(0,0,0,0.4);">
+            User / Customer
           </div>
         </div>
       `,
-      iconSize: [44, 44],
-      iconAnchor: [22, 22],
-      popupAnchor: [0, -22],
+      iconSize: [130, 80],
+      iconAnchor: [65, 52],
+      popupAnchor: [0, -48],
     });
-  }, [task.customerId?.avatar]);
+  }, [customerName, customerAvatar]);
 
   const helperIcon = useMemo(() => {
+    const escapedName = escapeHtml(helperName);
     return L.divIcon({
       className: 'custom-helper-pin',
       html: `
-        <div style="position: relative; width: 46px; height: 46px; display: flex; items-center; justify-content: center;">
-          <div style="position: absolute; inset: 0; background: rgba(16, 185, 129, 0.45); border-radius: 9999px; animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;"></div>
-          <div style="position: relative; width: 40px; height: 40px; border-radius: 9999px; background: #10b981; border: 3px solid #ffffff; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4); overflow: hidden;">
-            <img src="${task.helperId?.avatar || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop'}" style="width: 100%; height: 100%; object-fit: cover;" />
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 130px; pointer-events: none;">
+          <div style="background: rgba(15, 23, 42, 0.95); color: #ffffff; font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 9999px; border: 1.5px solid #34d399; box-shadow: 0 4px 12px rgba(0,0,0,0.6); white-space: nowrap; max-width: 125px; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px; text-align: center;">
+            🛵 ${escapedName}
           </div>
-          <div style="position: absolute; bottom: -6px; background: #047857; color: #fff; font-size: 9px; font-weight: 800; padding: 1px 5px; border-radius: 6px; border: 1px solid #34d399; white-space: nowrap;">
-            🛵 Delivery
+          <div style="position: relative; width: 46px; height: 46px; display: flex; align-items: center; justify-content: center;">
+            <div style="position: absolute; inset: 0; background: rgba(16, 185, 129, 0.45); border-radius: 9999px; animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;"></div>
+            <div style="position: relative; width: 40px; height: 40px; border-radius: 9999px; background: #10b981; border: 3px solid #ffffff; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4); overflow: hidden;">
+              <img src="${helperAvatar}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop'" />
+            </div>
+          </div>
+          <div style="background: #047857; color: #d1fae5; font-size: 9px; font-weight: 800; padding: 1px 6px; border-radius: 6px; border: 1px solid #34d399; margin-top: -4px; white-space: nowrap; box-shadow: 0 2px 6px rgba(0,0,0,0.4);">
+            Assigned Helper
           </div>
         </div>
       `,
-      iconSize: [46, 46],
-      iconAnchor: [23, 23],
-      popupAnchor: [0, -23],
+      iconSize: [130, 82],
+      iconAnchor: [65, 54],
+      popupAnchor: [0, -50],
     });
-  }, [task.helperId?.avatar]);
+  }, [helperName, helperAvatar]);
 
   return (
     <div className="rounded-3xl glass border border-slate-800 shadow-2xl overflow-hidden mb-8">
@@ -238,7 +295,9 @@ export default function LiveTrackingMap({ task, currentUser, isCustomer, isAssig
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
             </div>
             <h3 className="text-base font-black text-white">
-              {task.status === 'in_progress' ? 'Task In Progress • Live Tracking' : 'Helper Assigned • En Route'}
+              {task.status === 'in_progress'
+                ? `${helperName} is completing task for ${customerName}`
+                : `${helperName} is en route to ${customerName}`}
             </h3>
           </div>
         </div>
@@ -321,9 +380,12 @@ export default function LiveTrackingMap({ task, currentUser, isCustomer, isAssig
           {/* Customer Destination Marker */}
           <Marker position={customerPos} icon={customerIcon}>
             <Popup>
-              <div className="p-1 min-w-[180px]">
-                <p className="font-bold text-xs text-brand-400 mb-0.5">Customer Destination</p>
-                <p className="text-sm font-black text-white">{task.customerId?.name || 'Customer'}</p>
+              <div className="p-1 min-w-[200px]">
+                <div className="flex items-center space-x-1.5 mb-1">
+                  <span className="w-2 h-2 rounded-full bg-indigo-500"></span>
+                  <p className="font-bold text-xs text-brand-400">User / Customer Destination</p>
+                </div>
+                <p className="text-sm font-black text-white">{customerName}</p>
                 <p className="text-xs text-slate-300 mt-1">{task.location?.address}</p>
                 {task.location?.landmark && (
                   <p className="text-[11px] text-amber-400 mt-0.5">Near: {task.location.landmark}</p>
@@ -335,9 +397,12 @@ export default function LiveTrackingMap({ task, currentUser, isCustomer, isAssig
           {/* Delivery Person / Helper Marker */}
           <Marker position={helperPos} icon={helperIcon}>
             <Popup>
-              <div className="p-1 min-w-[180px]">
-                <p className="font-bold text-xs text-emerald-400 mb-0.5">Delivery Person / Helper</p>
-                <p className="text-sm font-black text-white">{task.helperId?.name || 'Helper'}</p>
+              <div className="p-1 min-w-[200px]">
+                <div className="flex items-center space-x-1.5 mb-1">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                  <p className="font-bold text-xs text-emerald-400">Assigned Helper</p>
+                </div>
+                <p className="text-sm font-black text-white">{helperName}</p>
                 <p className="text-xs text-slate-300 mt-1">
                   ⭐ {task.helperId?.stats?.avgRatingAsHelper || '5.0'} Rating
                 </p>
@@ -352,22 +417,48 @@ export default function LiveTrackingMap({ task, currentUser, isCustomer, isAssig
         {/* Floating Tracking Overlay Footer */}
         <div className="absolute bottom-3 left-3 right-3 z-20 pointer-events-auto">
           <div className="p-3 sm:p-4 rounded-2xl glass-card border border-slate-700/80 shadow-2xl backdrop-blur-md flex flex-wrap items-center justify-between gap-3">
+            {/* Helper Info */}
             <div className="flex items-center space-x-3">
-              <img
-                src={
-                  isCustomer
-                    ? task.helperId?.avatar || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop'
-                    : task.customerId?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&h=80&fit=crop'
-                }
-                alt="Partner"
-                className="w-10 h-10 rounded-full object-cover border-2 border-emerald-400 shadow-md"
-              />
+              <div className="relative">
+                <img
+                  src={helperAvatar}
+                  alt={helperName}
+                  className="w-10 h-10 rounded-full object-cover border-2 border-emerald-400 shadow-md"
+                />
+                <span className="absolute -bottom-1 -right-1 text-xs">🛵</span>
+              </div>
               <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-                  {isCustomer ? 'Your Assigned Helper' : 'Delivery Destination Customer'}
+                <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400 block">
+                  Assigned Helper
                 </span>
-                <span className="text-sm font-bold text-white">
-                  {isCustomer ? task.helperId?.name : task.customerId?.name}
+                <span className="text-sm font-bold text-white block">
+                  {helperName}
+                </span>
+                <span className="text-[11px] text-slate-400">
+                  ⭐ {task.helperId?.stats?.avgRatingAsHelper || '5.0'} Rating
+                </span>
+              </div>
+            </div>
+
+            {/* Customer / User Info */}
+            <div className="flex items-center space-x-3">
+              <div className="relative">
+                <img
+                  src={customerAvatar}
+                  alt={customerName}
+                  className="w-10 h-10 rounded-full object-cover border-2 border-indigo-400 shadow-md"
+                />
+                <span className="absolute -bottom-1 -right-1 text-xs">📍</span>
+              </div>
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-400 block">
+                  {isCustomer ? 'Customer (You)' : 'Customer (User)'}
+                </span>
+                <span className="text-sm font-bold text-white block">
+                  {customerName}
+                </span>
+                <span className="text-[11px] text-slate-400 max-w-[150px] truncate block">
+                  {task.location?.address}
                 </span>
               </div>
             </div>

@@ -100,11 +100,25 @@ export const useTaskStore = create<TaskState>((set, get) => ({
     set((state) => ({
       searchRadius,
       nearbyTasks: state.nearbyTasks.filter((t) => {
+        // Defensive: Ensure task has valid distance
         if (t.distanceKm !== undefined && t.distanceKm !== null) {
           return t.distanceKm <= radiusKm;
         }
+        
+        // Defensive: Ensure task has valid coordinates
         if (t.location?.coordinates && userCoords && userCoords.length === 2 && (userCoords[0] !== 0 || userCoords[1] !== 0)) {
-          const dist = calculateDistanceKm(userCoords, t.location.coordinates);
+          // Defensive: Validate coordinates are numbers
+          const tCoords = t.location.coordinates;
+          if (!Array.isArray(tCoords) || tCoords.length < 2) return false;
+          
+          const tLng = Number(tCoords[0]);
+          const tLat = Number(tCoords[1]);
+          if (isNaN(tLng) || isNaN(tLat) || tLng < -180 || tLng > 180 || tLat < -90 || tLat > 90) return false;
+          
+          // Defensive: Exclude [0, 0] coordinates
+          if (tLng === 0 && tLat === 0) return false;
+          
+          const dist = calculateDistanceKm(userCoords, [tLng, tLat]);
           return dist <= radiusKm;
         }
         return true;
@@ -138,21 +152,58 @@ export const useTaskStore = create<TaskState>((set, get) => ({
       const res = await API.get('/tasks/nearby', { params });
       if (res.data?.success && Array.isArray(res.data.data)) {
         const radiusKm = (searchRadius || 25000) / 1000;
-        const currentUserId = user?._id;
+        const currentUserId = user?._id?.toString(); // Convert to string once, safely
 
+        // Backend already filters out own tasks (matchQuery.customerId = { $ne: req.user._id }),
+        // but we do a final defensive client-side filter for safety
         const strictlyFiltered = res.data.data
           .filter((task: any) => {
-            const taskCreatorId = task.customerId?._id || task.customerId;
-            if (currentUserId && taskCreatorId && String(taskCreatorId) === String(currentUserId)) {
+            // Defensive: Ensure task has valid location data
+            if (!task.location?.coordinates || !Array.isArray(task.location.coordinates)) {
               return false;
             }
-            if (activeCoords && task.location?.coordinates && Array.isArray(task.location.coordinates) && task.location.coordinates.length >= 2) {
-              task.distanceKm = calculateDistanceKm(activeCoords, task.location.coordinates);
+            const tCoords = task.location.coordinates;
+            if (tCoords.length < 2) {
+              return false;
             }
+
+            // Defensive: Validate coordinates are numbers in valid ranges
+            const lng = Number(tCoords[0]);
+            const lat = Number(tCoords[1]);
+            if (isNaN(lng) || isNaN(lat) || lng < -180 || lng > 180 || lat < -90 || lat > 90) {
+              return false;
+            }
+
+            // Defensive: Ensure coordinates aren't [0, 0] (Gulf of Guinea)
+            if (lng === 0 && lat === 0) {
+              return false;
+            }
+
+            // Defensive: Calculate distance
+            if (activeCoords) {
+              task.distanceKm = calculateDistanceKm(activeCoords, [lng, lat]);
+            } else {
+              // Fallback if activeCoords not available
+              return false;
+            }
+
+            // Defensive: Distance must be valid
             if (task.distanceKm === undefined || task.distanceKm === null || isNaN(task.distanceKm)) {
               return false;
             }
-            return task.distanceKm <= radiusKm;
+
+            // Defensive: Filter by radius
+            if (task.distanceKm > radiusKm) {
+              return false;
+            }
+
+            // Defensive: Ensure user doesn't see their own tasks (double-check, though backend handles this)
+            const taskCreatorId = task.customerId?._id?.toString() || task.customerId?.toString();
+            if (currentUserId && taskCreatorId && currentUserId === taskCreatorId) {
+              return false;
+            }
+
+            return true;
           })
           .sort((a: any, b: any) => (a.distanceKm || 0) - (b.distanceKm || 0));
 
@@ -302,9 +353,13 @@ export const useTaskStore = create<TaskState>((set, get) => ({
       const isCustomer = user?.activeRole === 'customer';
       const custId = newTask.customerId?._id || newTask.customerId;
 
-      // Exclude own tasks from nearby feed
-      if (user?._id && custId?.toString() === user._id.toString()) {
-        return;
+      // Defensive: Exclude own tasks from nearby feed (backend filters, but verify client-side)
+      if (user?._id && custId) {
+        const userIdStr = String(user._id);
+        const custIdStr = String(custId);
+        if (userIdStr === custIdStr) {
+          return;
+        }
       }
 
       const { searchRadius } = get();
@@ -312,21 +367,35 @@ export const useTaskStore = create<TaskState>((set, get) => ({
       const userCoords = user?.location?.coordinates;
       const hasValidCoords = userCoords && userCoords.length === 2 && (userCoords[0] !== 0 || userCoords[1] !== 0);
 
-      // Tasks without valid coordinates cannot be discovered in nearby feed
+      // Defensive: Tasks without valid coordinates cannot be discovered
       if (!newTask.location?.coordinates || !Array.isArray(newTask.location.coordinates) || newTask.location.coordinates.length < 2) {
+        return;
+      }
+
+      // Defensive: Validate coordinates are numbers
+      const lng = Number(newTask.location.coordinates[0]);
+      const lat = Number(newTask.location.coordinates[1]);
+      if (isNaN(lng) || isNaN(lat) || lng < -180 || lng > 180 || lat < -90 || lat > 90) {
+        return;
+      }
+
+      // Defensive: Exclude [0, 0] coordinates
+      if (lng === 0 && lat === 0) {
         return;
       }
 
       if (hasValidCoords) {
         newTask.distanceKm = calculateDistanceKm(userCoords, newTask.location.coordinates);
-        // STRICT FILTER: If outside helper's selected radius, ignore immediately
-        if (newTask.distanceKm > radiusKm) {
+        // Defensive: If outside helper's selected radius, ignore immediately
+        if (newTask.distanceKm === undefined || newTask.distanceKm === null || isNaN(newTask.distanceKm) || newTask.distanceKm > radiusKm) {
           return;
         }
       }
 
       set((state) => {
+        // Defensive: Check if task already exists
         if (state.nearbyTasks.some((t) => t._id === newTask._id)) return state;
+        
         const updated = [newTask, ...state.nearbyTasks].sort((a, b) => (a.distanceKm || 0) - (b.distanceKm || 0));
         return { nearbyTasks: updated };
       });

@@ -20,6 +20,7 @@ import { getMobileSocket } from '../services/socket';
 import { calculateDistanceKm } from '../services/locationService';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const WebViewComponent: any = WebView;
 
 interface TaskLiveTrackingModalProps {
   visible: boolean;
@@ -238,6 +239,10 @@ export const TaskLiveTrackingModal: React.FC<TaskLiveTrackingModalProps> = ({
     const destLng = taskCoords[0];
     const destLat = taskCoords[1];
 
+    const customerDisplayName = recipient?.name || customer?.name || 'Customer';
+    const cleanCustomerName = customerDisplayName.replace(/'/g, "\\'");
+    const cleanHelperName = helperName.replace(/'/g, "\\'");
+
     return `
       <!DOCTYPE html>
       <html>
@@ -255,12 +260,36 @@ export const TaskLiveTrackingModal: React.FC<TaskLiveTrackingModalProps> = ({
             filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7);
           }
 
+          .marker-name-tag {
+            background: rgba(15, 23, 42, 0.95);
+            color: #ffffff;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 9999px;
+            white-space: nowrap;
+            max-width: 116px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 3px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+          }
+          .helper-tag {
+            border: 1.5px solid #34d399;
+          }
+          .dest-tag {
+            border: 1.5px solid #818cf8;
+          }
+
           /* Helper Live Marker with Pulse */
           .helper-marker-wrapper {
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             position: relative;
+            width: 120px;
           }
 
           .helper-pulse {
@@ -292,6 +321,15 @@ export const TaskLiveTrackingModal: React.FC<TaskLiveTrackingModalProps> = ({
           }
 
           /* Task Destination Marker */
+          .dest-marker-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            width: 120px;
+          }
+
           .dest-marker-bubble {
             width: 36px;
             height: 36px;
@@ -324,21 +362,25 @@ export const TaskLiveTrackingModal: React.FC<TaskLiveTrackingModalProps> = ({
           // Helper Icon
           const helperIcon = L.divIcon({
             className: 'helper-marker',
-            html: '<div class="helper-marker-wrapper"><div class="helper-pulse"></div><div class="helper-avatar-bubble">🛵</div></div>',
-            iconSize: [46, 46],
-            iconAnchor: [23, 23]
+            html: '<div class="helper-marker-wrapper"><div class="marker-name-tag helper-tag">🛵 ${cleanHelperName}</div><div class="helper-avatar-bubble">🛵</div></div>',
+            iconSize: [120, 64],
+            iconAnchor: [60, 44]
           });
 
           // Destination Icon
           const destIcon = L.divIcon({
             className: 'dest-marker',
-            html: '<div class="dest-marker-bubble">📍</div>',
-            iconSize: [36, 36],
-            iconAnchor: [18, 18]
+            html: '<div class="dest-marker-wrapper"><div class="marker-name-tag dest-tag">👤 ${cleanCustomerName}</div><div class="dest-marker-bubble">📍</div></div>',
+            iconSize: [120, 60],
+            iconAnchor: [60, 42]
           });
 
-          let helperMarker = L.marker([${helperLat}, ${helperLng}], { icon: helperIcon }).addTo(map);
-          let destMarker = L.marker([${destLat}, ${destLng}], { icon: destIcon }).addTo(map);
+          let helperMarker = L.marker([${helperLat}, ${helperLng}], { icon: helperIcon })
+            .bindPopup('<b>🛵 ${cleanHelperName}</b><br><span style="color:#10b981">Assigned Helper</span>')
+            .addTo(map);
+          let destMarker = L.marker([${destLat}, ${destLng}], { icon: destIcon })
+            .bindPopup('<b>👤 ${cleanCustomerName}</b><br><span style="color:#6366f1">Destination / Customer</span>')
+            .addTo(map);
 
           // Connecting polyline route
           let routeLine = L.polyline([
@@ -427,7 +469,7 @@ export const TaskLiveTrackingModal: React.FC<TaskLiveTrackingModalProps> = ({
 
         {/* Live Map Area */}
         <View style={styles.mapArea}>
-          <WebView
+          <WebViewComponent
             ref={webViewRef}
             originWhitelist={['*']}
             source={{ html: generateTrackingMapHTML() }}

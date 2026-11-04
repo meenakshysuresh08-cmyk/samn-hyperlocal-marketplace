@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 
 export default function HelperDashboard() {
-  const { user, userLocation } = useAuthStore();
+  const { user, userLocation, refreshUser } = useAuthStore();
   const { myTasks, fetchMyTasks, nearbyTasks, fetchNearbyTasks } = useTaskStore();
   const { conversations, loadConversations } = useChatStore();
   const [activeTab, setActiveTab] = useState('assigned'); // 'assigned', 'applied', 'nearby'
@@ -32,6 +32,7 @@ export default function HelperDashboard() {
     fetchMyTasks('helper');
     fetchNearbyTasks(activeCoords);
     loadConversations();
+    if (refreshUser) refreshUser();
   }, [userLocation?.coordinates]);
 
   const assignedTasks = myTasks.filter((t) =>
@@ -48,8 +49,14 @@ export default function HelperDashboard() {
     return !user?._id || !custId || custId.toString() !== user._id.toString();
   });
 
-  const totalEarned = user?.stats?.totalEarned || 0;
-  const tasksCompleted = user?.stats?.tasksCompleted || 0;
+  const completedJobs = assignedTasks.filter((t) => t.status === 'completed');
+  const calculatedEarned = completedJobs.reduce((sum, t) => sum + (t.budget?.amount || 0), 0);
+  const totalEarned = (user?.stats?.totalEarned && user.stats.totalEarned > 0)
+    ? user.stats.totalEarned
+    : calculatedEarned;
+  const tasksCompleted = (user?.stats?.tasksCompleted && user.stats.tasksCompleted > 0)
+    ? user.stats.tasksCompleted
+    : completedJobs.length;
 
   const displayedList =
     activeTab === 'assigned'

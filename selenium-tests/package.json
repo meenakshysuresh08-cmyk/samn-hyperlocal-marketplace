@@ -11,5 +11,11 @@
     "chromedriver": "^131.0.0",
     "selenium-webdriver": "^4.48.0",
     "xlsx": "^0.18.5"
-  }
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

@@ -201,6 +201,25 @@ export const calculateDistanceKm = (
   if (!c1 || !c2 || c1.length < 2 || c2.length < 2) return 0;
   const [lon1, lat1] = c1;
   const [lon2, lat2] = c2;
+  
+  // Validate coordinates
+  const validC1 = lon1 !== undefined && lat1 !== undefined &&
+                  typeof lon1 === 'number' && typeof lat1 === 'number' &&
+                  !isNaN(lon1) && !isNaN(lat1) &&
+                  lon1 >= -180 && lon1 <= 180 &&
+                  lat1 >= -90 && lat1 <= 90;
+  
+  const validC2 = lon2 !== undefined && lat2 !== undefined &&
+                  typeof lon2 === 'number' && typeof lat2 === 'number' &&
+                  !isNaN(lon2) && !isNaN(lat2) &&
+                  lon2 >= -180 && lon2 <= 180 &&
+                  lat2 >= -90 && lat2 <= 90;
+  
+  if (!validC1 || !validC2) return 0;
+  
+  // Exclude [0, 0] coordinates
+  if ((lon1 === 0 && lat1 === 0) || (lon2 === 0 && lat2 === 0)) return 0;
+  
   const R = 6371; // Earth radius in km
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
   const dLon = ((lon2 - lon1) * Math.PI) / 180;
@@ -211,7 +230,9 @@ export const calculateDistanceKm = (
       Math.sin(dLon / 2) *
       Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return parseFloat((R * c).toFixed(2));
+  const distance = R * c;
+  
+  return parseFloat(distance.toFixed(2));
 };
 
 /**
