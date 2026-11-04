@@ -15,13 +15,10 @@ try {
 }
 
 const rootOutDir = path.join(__dirname, '../../Vulnerability Test Results');
-const backendOutDir = path.join(__dirname, '../Vulnerability Test Results');
 
-[rootOutDir, backendOutDir].forEach((dir) => {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
-});
+if (!fs.existsSync(rootOutDir)) {
+  fs.mkdirSync(rootOutDir, { recursive: true });
+}
 
 // =========================================================================
 // 1. GENERATE 100 SECURITY FINDINGS & TEST CASES (WITH 100 VU LOAD DATA)
@@ -460,32 +457,13 @@ function buildWorkbook() {
   return wb;
 }
 
-// Helper function to safely write workbook
-function safeWriteFile(workbook, targetPath) {
-  try {
-    XLSX.writeFile(workbook, targetPath);
-    console.log(`Successfully written: ${targetPath}`);
-  } catch (err) {
-    if (err.code === 'EBUSY') {
-      const parsed = path.parse(targetPath);
-      const fallbackPath = path.join(parsed.dir, `${parsed.name}-100-tests${parsed.ext}`);
-      console.warn(`File is currently open/locked (${targetPath}). Saving as: ${fallbackPath}`);
-      XLSX.writeFile(workbook, fallbackPath);
-    } else {
-      throw err;
-    }
-  }
-}
+// Generate both findings.xlsx and endpoint-inventory.xlsx in root Vulnerability Test Results
+const wb1 = buildWorkbook();
+const findingsPath = path.join(rootOutDir, 'findings.xlsx');
+XLSX.writeFile(wb1, findingsPath);
 
-// Generate both findings.xlsx and endpoint-inventory.xlsx in root and backend folders
-[rootOutDir, backendOutDir].forEach((dir) => {
-  const wb1 = buildWorkbook();
-  const findingsPath = path.join(dir, 'findings.xlsx');
-  safeWriteFile(wb1, findingsPath);
+const wb2 = buildWorkbook();
+const endpointPath = path.join(rootOutDir, 'endpoint-inventory.xlsx');
+XLSX.writeFile(wb2, endpointPath);
 
-  const wb2 = buildWorkbook();
-  const endpointPath = path.join(dir, 'endpoint-inventory.xlsx');
-  safeWriteFile(wb2, endpointPath);
-
-  console.log(`Successfully generated 100 Security Test Cases & 100 Endpoint Inventory Load Tests in: ${dir}`);
-});
+console.log(`Successfully generated 100 Security Test Cases & 100 Endpoint Inventory Load Tests in: ${rootOutDir}`);

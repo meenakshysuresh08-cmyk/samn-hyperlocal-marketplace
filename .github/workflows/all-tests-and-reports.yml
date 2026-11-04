@@ -123,12 +123,25 @@ jobs:
           echo "Executing Security Review Generator..."
           node backend/scripts/generate-security-excel.js
 
+      - name: Run Security Quality Gate Check
+        run: |
+          echo "Verifying Critical Security Remediations..."
+          if grep -rn "devOtp" backend/src/controllers/auth.controller.js 2>/dev/null; then
+            echo "❌ CRITICAL: devOtp found in auth.controller.js!"
+            exit 1
+          fi
+          if grep -rn "samn_dev_secret_key_2026" backend/src/ 2>/dev/null; then
+            echo "❌ CRITICAL: Hardcoded fallback secret found in backend/src/!"
+            exit 1
+          fi
+          echo "✅ Security Quality Gate Passed! Critical vulnerabilities remediated."
+
       - name: Upload Security Vulnerability Excel Artifact
         uses: actions/upload-artifact@v4
         with:
           name: 03-Security-Findings-Report
           path: |
-            Vulnerability Test Results/findings*.xlsx
+            Vulnerability Test Results/findings.xlsx
             Vulnerability Test Results/security-review.md
             Vulnerability Test Results/executive-summary.md
             Vulnerability Test Results/dependency-report.md
@@ -190,7 +203,7 @@ jobs:
         with:
           name: 04-Endpoint-Load-Test-Report
           path: |
-            Vulnerability Test Results/endpoint-inventory*.xlsx
+            Vulnerability Test Results/endpoint-inventory.xlsx
           retention-days: 30
 
   # =========================================================================
@@ -240,8 +253,8 @@ jobs:
           node scripts/generate-security-excel.js || true
           cd ..
 
-          cp -v "Vulnerability Test Results"/findings*.xlsx all-excel-test-reports/03-Security-Vulnerability-Tests/ || true
-          cp -v "Vulnerability Test Results"/endpoint-inventory*.xlsx all-excel-test-reports/04-Baseline-Load-Tests/ || true
+          cp -v "Vulnerability Test Results"/findings.xlsx all-excel-test-reports/03-Security-Vulnerability-Tests/ || true
+          cp -v "Vulnerability Test Results"/endpoint-inventory.xlsx all-excel-test-reports/04-Baseline-Load-Tests/ || true
 
       - name: Upload Master Unified Excel Reports Bundle
         uses: actions/upload-artifact@v4
@@ -262,8 +275,8 @@ jobs:
           | :-: | :--- | :--- | :-: | :--- |
           | **1** | **Selenium Web E2E** | Web Frontend E2E & Cross-browser | **300+ Test Cases** | `SAMN_Selenium_Login_Test_Report.xlsx` |
           | **2** | **Appium Mobile E2E** | React Native / Android App E2E | **300+ Test Cases** | `SAMN_Appium_Mobile_E2E_Test_Report.xlsx` |
-          | **3** | **Security & SAST/DAST** | OWASP Top 10 API Vulnerabilities | **100 Test Cases** | `findings-100-tests.xlsx` |
-          | **4** | **Baseline Load Testing** | 100 Virtual Users (1 Min Continuous) | **100 Scenarios** | `endpoint-inventory-100-tests.xlsx` |
+          | **3** | **Security & SAST/DAST** | OWASP Top 10 API Vulnerabilities | **100 Test Cases** | `findings.xlsx` |
+          | **4** | **Baseline Load Testing** | 100 Virtual Users (1 Min Continuous) | **100 Scenarios** | `endpoint-inventory.xlsx` |
 
           ### 📥 How to Download the Excel Reports
           1. Go to the **Actions** tab in your GitHub repository.

@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 
 const generateToken = (userId) => {
-  return jwt.sign({ id: userId }, process.env.JWT_SECRET || 'samn_dev_secret_key_2026', {
+  return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE || '30d',
   });
 };
@@ -260,7 +260,6 @@ const forgotPassword = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: `Verification code sent to ${cleanEmail}`,
-      devOtp: otp, // Included for seamless testing in development
     });
   } catch (error) {
     console.error('[Auth Controller Error - Forgot Password]:', error);

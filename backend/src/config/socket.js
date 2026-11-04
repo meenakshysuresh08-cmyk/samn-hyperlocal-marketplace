@@ -23,7 +23,7 @@ const initSocket = (httpServer) => {
         socket.handshake.headers?.authorization?.replace('Bearer ', '');
 
       if (token) {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'samn_dev_secret_key_2026');
+        const decoded = jwt.verify(token, process.env.JWT_SECRET, { algorithms: ['HS256'] });
         const user = await User.findById(decoded.id).select('-passwordHash');
         if (user) {
           socket.user = user;
